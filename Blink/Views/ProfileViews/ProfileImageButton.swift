@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 class ProfileImageButton: UIButton {
     
@@ -15,7 +16,6 @@ class ProfileImageButton: UIButton {
     
     private let PADDING_MULTIPLIER: CGFloat = 0.7
 
-    
     private let defaultImage: UIImage = {
         let image = UIImage(systemName: "plus.circle.fill")?.withRenderingMode(.alwaysTemplate)
         return image!
@@ -51,24 +51,36 @@ class ProfileImageButton: UIButton {
                                            bottom: paddingMultiplier,
                                            right: paddingMultiplier)
         }
+        else {
+            imageEdgeInsets = .zero
+        }
 
-        
-        
-        
     }
     
     
     //MARK: - Helpers
     
-    public func uploadPhoto(with photo: UIImage) {
+    public func hasUploadedPhoto() -> Bool {
+        return imageView?.image != defaultImage
+    }
+    
+    public func uploadPhoto(with profileUrl: URL) {
         
-        //Set the image
-        setImage(photo, for: .normal)
+        //Set the image for the button
+        sd_setImage(with: profileUrl, for: .normal)
         
         //Remove padding
         imageEdgeInsets = .zero
         
+    }
+    
+    public func uploadPhoto(with image: UIImage) {
         
+        //Set the image
+        setImage(image, for: .normal)
+        
+        //Remove padding
+        imageEdgeInsets = .zero
         
     }
     

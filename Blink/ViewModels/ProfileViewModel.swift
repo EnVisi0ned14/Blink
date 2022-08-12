@@ -13,7 +13,6 @@ enum ProfileSection: Int, CaseIterable {
     case profession
     case age
     case bio
-    case ageRange
     
     var description: String {
         switch self {
@@ -21,38 +20,37 @@ enum ProfileSection: Int, CaseIterable {
         case .profession: return "Profession"
         case .age: return "Age"
         case .bio: return "Bio"
-        case .ageRange: return "Seeking Age Range"
         }
     }
 }
 
 struct ProfileViewModel {
     
-    //private let user: User
+    private let user: User
+    
     let section: ProfileSection
     
     let placeHolderText: String
     var value: String?
     
-    
-    
-    init(section: ProfileSection) {
+    init(section: ProfileSection, user: User) {
         //self.user = user
         self.section = section
+        self.user = user
         
         placeHolderText = "Enter \(section.description.lowercased()).."
         
-//        switch section {
-//        
-//        case .name:
-//            value = user.name
-//        case .profession:
-//            value = user.profession
-//        case .age:
-//            value = "\(user.age)"
-//        case .bio:
-//            value = user.bio
-//        }
+        switch section {
+        
+        case .name:
+            value = user.userProfile.fullName
+        case .profession:
+            value = user.userProfile.occupation
+        case .age:
+            value = "\(user.userProfile.age ?? 0)"
+        case .bio:
+            value = user.userProfile.bio
+        }
     }
 
 }

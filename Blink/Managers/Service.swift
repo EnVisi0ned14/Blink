@@ -35,7 +35,11 @@ public class Service {
         }
     }
     
-    static func fetchUsers(for user: User, completion: @escaping ([User]) -> Void) {
+    public static func saveUserData(for user: User, completion: @escaping (Error?) -> Void) {
+        user.genderCollection.document(user.uid).updateData(user.getUserNode(), completion: completion)
+    }
+    
+    public static func fetchUsers(for user: User, completion: @escaping ([User]) -> Void) {
         
         //Initalize users
         var users = [User]()
@@ -49,18 +53,22 @@ public class Service {
             //Unwrap the key
             guard let safeKey = key else { return }
             
-            user.genderedCollection.document("\(safeKey)").getDocument { snapshot, error in
+            user.preferenceCollection.document("\(safeKey)").getDocument { snapshot, error in
+                
+                print("DEBUG: Found location for key \(safeKey)")
                 
                 guard let userNode = snapshot?.data(),
                       let searchedUser = User(with: userNode),
                       let age = searchedUser.userProfile.age else { return }
+                
+                print("DEBUG: Made user")
                 
                 if(age > user.userSettings.maxSeekingAge) { return }
                 if(age < user.userSettings.minSeekingAge) { return }
                 if(searchedUser.uid == user.uid) { return }
                 
                 //Append the user
-                users.append(user)
+                users.append(searchedUser)
 
             }
             

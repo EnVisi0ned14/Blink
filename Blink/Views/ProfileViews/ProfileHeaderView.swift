@@ -7,9 +7,11 @@
 
 import UIKit
 
-class ProfileHeaderView: UIView {
-    
+protocol ProfileHeaderViewDelegate: AnyObject {
+    func wantsToUploadImage(button: ProfileImageButton)
+}
 
+class ProfileHeaderView: UIView {
     
     /** NUMBER_OF_COLUMNS is the number of columns in the profile header view*/
     private let NUMBER_OF_COLUMNS: CGFloat = 3
@@ -20,13 +22,13 @@ class ProfileHeaderView: UIView {
     /** TOTAL_HEIGHT_PADDING is the total padding on the top + bottom + in between columns */
     private let TOTAL_HEIGHT_PADDING: CGFloat = 40
     
+    private let user: User
+    
     private var regularProfileButtonWidth: CGFloat {
-        
-        get {
             return (frame.width - TOTAL_WIDTH_PADDING) / NUMBER_OF_COLUMNS
-        }
-        
     }
+    
+    weak var delegate: ProfileHeaderViewDelegate?
     
     private let bigProfileButton: ProfileImageButton = ProfileImageButton(image: nil, index: 0)
     private let regularProfileButton1: ProfileImageButton = ProfileImageButton(image: nil, index: 1)
@@ -35,10 +37,17 @@ class ProfileHeaderView: UIView {
     private let regularProfileButton4: ProfileImageButton = ProfileImageButton(image: nil, index: 4)
     private let regularProfileButton5: ProfileImageButton = ProfileImageButton(image: nil, index: 5)
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    private lazy var buttons = [bigProfileButton, regularProfileButton1, regularProfileButton2, regularProfileButton3, regularProfileButton4, regularProfileButton5]
+    
+    init(user: User) {
+        self.user = user
+        super.init(frame: .zero)
         
+        //Set up targets
+        buttons.forEach({$0.addTarget(self, action: #selector(uploadImageForButton), for: .touchUpInside)})
         
+        //Populate the buttons
+        populateProfileImages()
         
     }
     
@@ -52,8 +61,45 @@ class ProfileHeaderView: UIView {
         configureView()
     }
     
+    //MARK: - Actions
+    
+    @objc private func uploadImageForButton(_ button: ProfileImageButton) {
+        delegate?.wantsToUploadImage(button: getEmptyButton() ?? button)
+    }
+    
     
     //MARK: - Helpers
+    
+    
+    public func getEmptyButton() -> ProfileImageButton? {
+        
+        for button in buttons {
+            if(!button.hasUploadedPhoto()) { return button }
+        }
+        
+        return nil
+        
+    }
+    
+    public func allButtonsAreFull() -> Bool {
+        
+        for button in buttons {
+            if(!button.hasUploadedPhoto()) { return false }
+        }
+        
+        return true
+    }
+    
+    private func populateProfileImages() {
+        
+        for (index, profileStringUrl) in user.userProfile.profilePictures.enumerated() {
+            //Grab the url
+            guard let url = URL(string: profileStringUrl) else { return }
+            //Set the image for the button
+            buttons[index].uploadPhoto(with: url)
+        }
+        
+    }
     
     public func getHeight() -> CGFloat {
         return regularProfileButtonWidth * NUMBER_OF_COLUMNS + TOTAL_HEIGHT_PADDING
@@ -84,7 +130,7 @@ class ProfileHeaderView: UIView {
         let rightColumn = UIStackView(arrangedSubviews: [
                                         regularProfileButton1,
                                         regularProfileButton2,
-                                        regularProfileButton3].map({ profileImage in
+                                        regularProfileButton5].map({ profileImage in
                                             profileImage.constrainHeight(regularProfileButtonWidth)
                                             profileImage.constrainWidth(regularProfileButtonWidth)
                                             return profileImage
@@ -104,8 +150,8 @@ class ProfileHeaderView: UIView {
     private func createLeftColumn() -> UIStackView {
         
         let lowerLeftColumn = UIStackView(arrangedSubviews: [
-                                            regularProfileButton4,
-                                            regularProfileButton5].map({ profileImage in
+                                            regularProfileButton3,
+                                            regularProfileButton4].map({ profileImage in
                                                 profileImage.constrainHeight(regularProfileButtonWidth)
                                                 profileImage.constrainWidth(regularProfileButtonWidth)
                                                 return profileImage
@@ -124,6 +170,8 @@ class ProfileHeaderView: UIView {
         return leftColumn
         
     }
+    
+
 
 
 }

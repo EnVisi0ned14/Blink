@@ -73,6 +73,7 @@ class MatchScreenViewController: UIViewController {
         
         guard let user = RegistrationManager.shared.getCurrentUser() else { return }
 
+        print("DEBUG: Fetching and loading cards")
         fetchAndLoadCards(for: user)
         
     }
@@ -82,6 +83,7 @@ class MatchScreenViewController: UIViewController {
         Service.fetchUsers(for: user) { [weak self] users in
             
             self?.viewModels = users.map({ user in
+                print("DEBUG: Fetched user \(user.userProfile.firstName)")
                 return CardViewModel(user: user)
             })
         }
@@ -103,10 +105,11 @@ class MatchScreenViewController: UIViewController {
     }
     
     private func logUserIn() {
-
+        print("DEBUG: Logging user in")
         guard let uid = Auth.auth().currentUser?.uid else { return }
         
         Service.fetchUser(withUid: uid) { user in
+            print("DEBUG: Found user logging in...")
             RegistrationManager.shared.logUserIn(user: user)
         }
         
@@ -158,8 +161,7 @@ class MatchScreenViewController: UIViewController {
     
     
     private func configureCards() {
-        print("DEBUG: Configure cards now...")
-        
+        print("DEBUG: Configuring cards...")
         viewModels.forEach { viewModel in
             let cardView = CardView(cardViewModel: viewModel)
             cardView.delegate = self
@@ -179,9 +181,12 @@ extension MatchScreenViewController: MatchScreenTopStackViewDelegate {
     
     //Present profile controller
     func wantsToPresentProfileController() {
+        
+        //Get the current user
+        guard let user = RegistrationManager.shared.getCurrentUser() else { return }
 
         //Create the profile VC
-        let profileVC = ProfileViewController()
+        let profileVC = ProfileViewController(user: user)
         //Present full screen
         profileVC.modalPresentationStyle = .fullScreen
         //Set the title
@@ -210,11 +215,11 @@ extension MatchScreenViewController: CardViewDelegate {
     
     func cardView(_ view: CardView, wantsToShowStatsFor user: User) {
         
-        let statsVC = SettingsViewController()
+        let statsVC = StatsViewController(user: user)
         
         statsVC.modalPresentationStyle = .fullScreen
         
-        navigationController?.pushViewController(statsVC, animated: true)
+        present(statsVC, animated: true, completion: nil)
 
     }
     

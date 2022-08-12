@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4874734E28A5D9ED009852C1 /* StatsCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4874734D28A5D9ED009852C1 /* StatsCollectionView.swift */; };
+		4874735028A5DAE3009852C1 /* StatsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4874734F28A5DAE3009852C1 /* StatsCollectionViewCell.swift */; };
+		4874735228A5DD5E009852C1 /* ImageButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4874735128A5DD5E009852C1 /* ImageButton.swift */; };
 		48786BD2289C2852005F5146 /* RegistrationLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48786BD1289C2852005F5146 /* RegistrationLabel.swift */; };
 		48786BD4289C3298005F5146 /* BlinkButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48786BD3289C3298005F5146 /* BlinkButton.swift */; };
 		48786BDB289C3B9C005F5146 /* Validator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48786BDA289C3B9C005F5146 /* Validator.swift */; };
@@ -77,6 +80,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4874734D28A5D9ED009852C1 /* StatsCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsCollectionView.swift; sourceTree = "<group>"; };
+		4874734F28A5DAE3009852C1 /* StatsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsCollectionViewCell.swift; sourceTree = "<group>"; };
+		4874735128A5DD5E009852C1 /* ImageButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageButton.swift; sourceTree = "<group>"; };
 		48786BD1289C2852005F5146 /* RegistrationLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationLabel.swift; sourceTree = "<group>"; };
 		48786BD3289C3298005F5146 /* BlinkButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlinkButton.swift; sourceTree = "<group>"; };
 		48786BDA289C3B9C005F5146 /* Validator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validator.swift; sourceTree = "<group>"; };
@@ -168,6 +174,14 @@
 				B749DF131261B9104B381774 /* Pods_Blink.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4874734C28A5D9CA009852C1 /* StatViews */ = {
+			isa = PBXGroup;
+			children = (
+				4874734D28A5D9ED009852C1 /* StatsCollectionView.swift */,
+			);
+			path = StatViews;
 			sourceTree = "<group>";
 		};
 		48786BD5289C3566005F5146 /* LoginViews */ = {
@@ -267,6 +281,7 @@
 		48EE63EC288DD4B0004682FA /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				4874734C28A5D9CA009852C1 /* StatViews */,
 				48786BD6289C3582005F5146 /* RegistrationViews */,
 				48786BD5289C3566005F5146 /* LoginViews */,
 				48EE642B289AF874004682FA /* SettingViews */,
@@ -274,6 +289,7 @@
 				48EE6407288E1CD6004682FA /* PersonDescriptor */,
 				48EE63FD288DE353004682FA /* MatchTopStack */,
 				48EE63FF288DE393004682FA /* CardView.swift */,
+				4874735128A5DD5E009852C1 /* ImageButton.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -360,6 +376,7 @@
 				48EE641C2899DE79004682FA /* SettingsSliderTableViewCell.swift */,
 				48786BF928A08D6D005F5146 /* SettingsGenderTableViewCell.swift */,
 				48786BFB28A1772B005F5146 /* LogoutTableViewCell.swift */,
+				4874734F28A5DAE3009852C1 /* StatsCollectionViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -563,11 +580,13 @@
 				48786BD4289C3298005F5146 /* BlinkButton.swift in Sources */,
 				48EE6438289B124A004682FA /* User.swift in Sources */,
 				48786C0928A348A4005F5146 /* DateManager.swift in Sources */,
+				4874734E28A5D9ED009852C1 /* StatsCollectionView.swift in Sources */,
 				48EE63DB288DD477004682FA /* SceneDelegate.swift in Sources */,
 				48EE6411288E2EAA004682FA /* ProfileViewModel.swift in Sources */,
 				48EE6431289B0B6A004682FA /* NoAccountLabel.swift in Sources */,
 				48786C0428A18713005F5146 /* Constants.swift in Sources */,
 				48786BE3289C800D005F5146 /* RegistrationBirthdayViewController.swift in Sources */,
+				4874735028A5DAE3009852C1 /* StatsCollectionViewCell.swift in Sources */,
 				48EE642F289AFA16004682FA /* LoginButton.swift in Sources */,
 				48786BFA28A08D6D005F5146 /* SettingsGenderTableViewCell.swift in Sources */,
 				48786BE5289CB1AD005F5146 /* BirthdayTextField.swift in Sources */,
@@ -580,6 +599,7 @@
 				48786C0B28A4716B005F5146 /* UserProfile.swift in Sources */,
 				48786BDB289C3B9C005F5146 /* Validator.swift in Sources */,
 				48786BD2289C2852005F5146 /* RegistrationLabel.swift in Sources */,
+				4874735228A5DD5E009852C1 /* ImageButton.swift in Sources */,
 				48EE63FA288DD978004682FA /* SettingsIcon.swift in Sources */,
 				48786C0228A18336005F5146 /* Service.swift in Sources */,
 				48786BF128A01D8B005F5146 /* RegistrationPreferenceViewController.swift in Sources */,

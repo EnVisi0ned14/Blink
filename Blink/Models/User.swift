@@ -24,7 +24,15 @@ public class User {
     var userProfile: UserProfile
     var uid: String
     
-    var genderedCollection: CollectionReference {
+    var preferenceCollection: CollectionReference {
+        switch userSettings.preference {
+        case .male:
+            return COLLECTION_MALE_USERS
+        case .female:
+            return COLLECTION_FEMALE_USERS
+        }
+    }
+    var genderCollection: CollectionReference {
         switch userSettings.gender {
         case .male:
             return COLLECTION_MALE_USERS
@@ -34,7 +42,7 @@ public class User {
     }
     
     var locationCollection: GeoFirestore {
-        switch userSettings.gender {
+        switch userSettings.preference {
         case .male:
             return COLLECTION_LOCATION_MALE
         case .female:
@@ -154,7 +162,7 @@ public class User {
         
         //User profile
         private var birthday: Date = Date()
-        private var profilePictures: [String] = []
+        private var profilePictures: [String] = ["", "", "", "", "", ""]
         private var firstName: String = ""
         private var lastName: String = ""
         private var occupation: String = ""
@@ -217,7 +225,11 @@ public class User {
         }
         
         public func setProfilePictures(profilePictures: [String]) -> UserBuilder {
-            self.profilePictures = profilePictures
+            
+            for (index, profilePicture) in self.profilePictures.enumerated() {
+                self.profilePictures[index] = profilePicture
+            }
+            
             return self
         }
         

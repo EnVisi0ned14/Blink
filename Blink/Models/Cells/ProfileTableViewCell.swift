@@ -58,8 +58,10 @@ class ProfileTableViewCell: UITableViewCell {
     
     //Called everytime a view model set
     private func configure() {
+        
         //Set the place holder text for the input field
         inputField.placeholder = profileViewModel.placeHolderText
+        
         //Assign the text for the input field
         inputField.text = profileViewModel.value
     }
