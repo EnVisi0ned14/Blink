@@ -136,10 +136,6 @@ class RegistrationPhotoViewController: UIViewController {
         //Log the user in
         RegistrationManager.shared.logUserIn(user: user)
         
-        //Notify observers that user logged in
-        NotificationCenter.default.post(name: Notification.Name(rawValue: USER_LOGGED_IN),
-                                        object: nil)
-        
         //Dismiss spinner
         hud.dismiss()
         

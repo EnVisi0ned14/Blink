@@ -9,6 +9,9 @@
 import FirebaseStorage
 import FirebaseAuth
 import UIKit
+import Geofirestore
+import CoreLocation
+import FirebaseFirestore
 
 public class Service {
     
@@ -32,32 +35,69 @@ public class Service {
         }
     }
     
-//    static func fetchUsers(forCurrentUser user: User, completion: @escaping([User]) -> Void) {
-//        var users = [User]()
-//
-//        let minAge = user.userSettings.minSeekingAge
-//        let maxAge = user.userSettings.maxSeekingAge
-//        let collection = user.userSettings.gender == .male ? COLLECTION_MALE_USERS : COLLECTION_FEMALE_USERS
-//
-//        let query = collection
-//            .whereField("age", isGreaterThanOrEqualTo: minAge)
-//            .whereField("age", isLessThanOrEqualTo: maxAge)
-//
-//        query.getDocuments { snapshot, error in
-//            guard let snapshot = snapshot else { return }
-//            snapshot.documents.forEach({ document in
-//                let userNode = document.data()
-//                let user = User(userNode: userNode)
-//
-//                guard user.uid != Auth.auth().currentUser?.uid else { return }
-//
-//                users.append(user)
-//
-//                if(users.count == snapshot.documents.count - 1) {
-//                    completion(users)
-//                }
-//            })
-//        }
-//    }
+    static func fetchUsers(for user: User, completion: @escaping ([User]) -> Void) {
+        
+        //Initalize users
+        var users = [User]()
+        
+        //Create circle query
+        let circleQuery = user.locationCollection.query(withCenter: user.centerLocation,
+                                                 radius: Double(user.userSettings.distanceRange))
+        
+        circleQuery.observe(.documentEntered) { (key: String!, _) in
+
+            //Unwrap the key
+            guard let safeKey = key else { return }
+            
+            user.genderedCollection.document("\(safeKey)").getDocument { snapshot, error in
+                
+                guard let userNode = snapshot?.data(),
+                      let searchedUser = User(with: userNode),
+                      let age = searchedUser.userProfile.age else { return }
+                
+                if(age > user.userSettings.maxSeekingAge) { return }
+                if(age < user.userSettings.minSeekingAge) { return }
+                if(searchedUser.uid == user.uid) { return }
+                
+                //Append the user
+                users.append(user)
+
+            }
+            
+        }
+        
+        //CALLED WHEN ALL KEYS HAVE BEEN OBSERVED
+        circleQuery.observeReady {
+            completion(users)
+        }
+
+    }
     
+    static func fetchUser(withUid uid: String, completion: @escaping (User) -> Void) {
+        
+        COLLECTION_MALE_USERS.document(uid).getDocument { (snapshot, error) in
+            
+            if let userNode = snapshot?.data() {
+                guard let user = User(with: userNode) else {
+                    print("DEBUG: Failed to create user")
+                    return
+                }
+                completion(user)
+            }
+            else {
+                COLLECTION_FEMALE_USERS.document(uid).getDocument { snapshot, error in
+                    guard let userNode = snapshot?.data() else {
+                        print("DEBUG: No user node found")
+                        return
+                    }
+                    guard let user = User(with: userNode) else {
+                        print("DEBUG: Failed to create user")
+                        return
+                    }
+                    
+                    completion(user)
+                }
+            }
+        }
+    }
 }

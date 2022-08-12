@@ -17,6 +17,8 @@ public struct UserSettings {
     var geoHash: String
     var latitude: Double
     var longitude: Double
+
+    
     
     init(minSeekingAge: Int, maxSeekingAge: Int, distanceRange: Int, gender: Gender,
          preference: Gender, geoHash: String, latitude: Double, longitude: Double) {
@@ -34,16 +36,17 @@ public struct UserSettings {
     
     init?(userNode: [String: Any]) {
         
-        guard let minSeekingAge = userNode[MIN_SEEKING_AGE] as? Int,
-              let maxSeekingAge = userNode[MAX_SEEKING_AGE] as? Int,
-              let distanceRange = userNode[DISTANCE_RANGE] as? Int,
-              let genderString = userNode[GENDER] as? String,
+        guard let userSettings = userNode[USER_SETTINGS] as? [String: Any],
+              let minSeekingAge = userSettings[MIN_SEEKING_AGE] as? Int,
+              let maxSeekingAge = userSettings[MAX_SEEKING_AGE_KEY] as? Int,
+              let distanceRange = userSettings[DISTANCE_RANGE] as? Int,
+              let genderString = userSettings[GENDER] as? String,
               let gender = Gender(rawValue: genderString),
-              let preferenceString = userNode[PREFERENCE] as? String,
+              let preferenceString = userSettings[PREFERENCE] as? String,
               let preference = Gender(rawValue: preferenceString),
-              let geoHash = userNode[GEO_HASH] as? String,
-              let latitude = userNode[LATITUDE] as? Double,
-              let longitude = userNode[LONGITUDE] as? Double else { return nil }
+              let geoHash = userSettings[GEO_HASH] as? String,
+              let latitude = userSettings[LATITUDE] as? Double,
+              let longitude = userSettings[LONGITUDE] as? Double else { return nil }
         
         self.init(minSeekingAge: minSeekingAge, maxSeekingAge: maxSeekingAge, distanceRange: distanceRange, gender: gender, preference: preference, geoHash: geoHash, latitude: latitude, longitude: longitude)
         

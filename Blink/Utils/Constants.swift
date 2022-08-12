@@ -44,7 +44,7 @@ let PROFILE_PICTURES = "profile_pictures"
 
 //User settings
 
-let MAX_SEEKING_AGE = "max_seeking_age"
+let MAX_SEEKING_AGE_KEY = "max_seeking_age"
 let MIN_SEEKING_AGE = "min_seeking_age"
 let DISTANCE_RANGE = "distance_range"
 let PREFERENCE = "preference"

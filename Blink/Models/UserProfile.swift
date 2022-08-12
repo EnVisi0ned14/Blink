@@ -9,11 +9,11 @@ import Foundation
 
 public struct UserProfile {
     
-    var ocupation: String = ""
-    var school: String = ""
+    var occupation: String
+    var school: String
     var firstName: String
     var lastName: String
-    var bio: String = ""
+    var bio: String
     var birthday: Date
     var profilePictures: [String]
     
@@ -21,11 +21,19 @@ public struct UserProfile {
         get { return "\(firstName) \(lastName)"}
     }
     
-    init(birthday: Date, profilePictures: [String], firstName: String, lastName: String) {
+    var age: Int? {
+        return Date.getAgeFromDate(for: birthday)
+    }
+    
+    init(birthday: Date, profilePictures: [String], firstName: String, lastName: String,
+         occupation: String, school: String, bio: String) {
         self.firstName = firstName
         self.lastName = lastName
         self.birthday = birthday
         self.profilePictures = profilePictures
+        self.occupation = occupation
+        self.school = school
+        self.bio = bio
     }
     
     init?(userNode: [String: Any]) {
@@ -40,7 +48,7 @@ public struct UserProfile {
               let profilePictures = userProfile[PROFILE_PICTURES] as? [String],
               let school = userProfile[SCHOOL] as? String else { return nil }
         
-        self.ocupation = ocupation
+        self.occupation = ocupation
         self.firstName = firstName
         self.lastName = lastName
         self.birthday = birthdayDate

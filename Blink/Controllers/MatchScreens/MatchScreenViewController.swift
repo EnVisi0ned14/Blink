@@ -12,18 +12,24 @@ class MatchScreenViewController: UIViewController {
 
     //MARK: - Fields
     private let matchScreenTopStackView = MatchScreenTopStackView(frame: .zero)
-    private let card: CardView = CardView(frame: .zero)
+
+    private var topCardView: CardView?
+    private var cardViews = [CardView]()
+    
+    private var viewModels = [CardViewModel]() {
+        didSet { configureCards() }
+    }
+    
+    private let deckView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.layer.cornerRadius = 10
+        return view
+    }()
     
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        do {
-            try FirebaseAuth.Auth.auth().signOut()
-        }
-        catch {
-        
-        }
         
         //Assign delegates
         matchScreenTopStackView.delegate = self
@@ -32,13 +38,11 @@ class MatchScreenViewController: UIViewController {
         createObservers()
         
         //Check if user is logged in
-        checkIfUserIsLoggedIn()
+        handleLogIn()
         
         //Configure the UI
         configureUI()
         
-        
-
         
     }
     
@@ -68,23 +72,44 @@ class MatchScreenViewController: UIViewController {
     @objc private func userLoggedIn(notification: NSNotification) {
         
         guard let user = RegistrationManager.shared.getCurrentUser() else { return }
-        
+
         fetchAndLoadCards(for: user)
         
     }
     
     private func fetchAndLoadCards(for user: User) {
-        
-        
+
+        Service.fetchUsers(for: user) { [weak self] users in
+            
+            self?.viewModels = users.map({ user in
+                return CardViewModel(user: user)
+            })
+        }
         
     }
     
-    private func checkIfUserIsLoggedIn() {
+    private func handleLogIn() {
         
         //If there is not a current user
         if(FirebaseAuth.Auth.auth().currentUser == nil) {
             presentLoginController()
+            return
         }
+        else {
+            logUserIn()
+        }
+        
+        
+    }
+    
+    private func logUserIn() {
+
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
+        Service.fetchUser(withUid: uid) { user in
+            RegistrationManager.shared.logUserIn(user: user)
+        }
+        
         
     }
     
@@ -103,23 +128,50 @@ class MatchScreenViewController: UIViewController {
         //Make background color white
         view.backgroundColor = .white
         
+        //Create stack
+        let cardStack = createCardStack()
         
-        //Add the top stack view as a subivew
-        view.addSubview(matchScreenTopStackView)
+        //Add card stack to superview
+        view.addSubview(cardStack)
         
-        //Constrain the top stack view
-        matchScreenTopStackView.anchor(top: view.topAnchor,
-                                       leading: view.leadingAnchor,
-                                       trailing: view.trailingAnchor)
-        
-        //Add the card to the subview
-        view.addSubview(card)
-        
-        //Constrain the card
-        card.anchor(top: matchScreenTopStackView.bottomAnchor, leading: view.leadingAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.trailingAnchor, padding: UIEdgeInsets(top: 10, left: 20, bottom: 20, right: 20))
-        
+        //Constrain card stack
+        cardStack.anchor(top: view.topAnchor,
+                         leading: view.leadingAnchor,
+                         bottom: view.safeAreaLayoutGuide.bottomAnchor,
+                         trailing: view.trailingAnchor,
+                         padding: UIEdgeInsets(top: 0, left: 20, bottom: 20, right: 20))
         
     }
+    
+    private func createCardStack() -> UIStackView {
+        //Create card stack
+        let cardStack = UIStackView(arrangedSubviews: [matchScreenTopStackView, deckView])
+        //Axis vertical
+        cardStack.axis = .vertical
+        //Fill
+        cardStack.distribution = .fill
+        //Spacing
+        cardStack.spacing = 10
+        //Return
+        return cardStack
+    }
+    
+    
+    private func configureCards() {
+        print("DEBUG: Configure cards now...")
+        
+        viewModels.forEach { viewModel in
+            let cardView = CardView(cardViewModel: viewModel)
+            cardView.delegate = self
+            deckView.addSubview(cardView)
+            cardView.fillSuperview()
+        }
+        
+        cardViews = deckView.subviews.map({ $0 as! CardView })
+        topCardView = cardViews.last
+        
+    }
+    
 }
 
 //MARK: - MatchScreenTopStackViewDelegate
@@ -149,5 +201,34 @@ extension MatchScreenViewController: MatchScreenTopStackViewDelegate {
         navigationController?.pushViewController(settingsVC, animated: true)
         
     }
+    
+}
+
+//MARK: CardViewDelegate
+
+extension MatchScreenViewController: CardViewDelegate {
+    
+    func cardView(_ view: CardView, wantsToShowStatsFor user: User) {
+        
+        let statsVC = SettingsViewController()
+        
+        statsVC.modalPresentationStyle = .fullScreen
+        
+        navigationController?.pushViewController(statsVC, animated: true)
+
+    }
+    
+    func cardView(_ view: CardView, didLikeUser: Bool) {
+        
+        print("DEBUG: Swipe detected...")
+        view.removeFromSuperview()
+        self.cardViews.removeAll(where: { view == $0})
+        
+        //guard let user = topCardView?.cardViewModel.user else { return }
+        //self.saveSwipeAndCheckForMatch(forUser: user, didLike: didLikeUser)
+        
+        self.topCardView = cardViews.last
+    }
+    
     
 }

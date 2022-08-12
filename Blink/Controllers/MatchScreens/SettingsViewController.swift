@@ -123,17 +123,7 @@ extension SettingsViewController: UITableViewDataSource {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: settingsCell.identifier) as! PreferenceCellTableViewCell
         cell.settingsViewModel = SettingsViewModel(section: settingsCell,
-                                                   user: User(with: AuthCredentials(
-                                                                email: "",
-                                                                firstName: "",
-                                                                lastName: "",
-                                                                password: "",
-                                                                birthday: Date(),
-                                                                gender: .male,
-                                                                preference: .female,
-                                                                profilePicutre: UIImage(named: "plus")!,
-                                                                location: Location(longitude: 0, latitude: 0, geoHash: "")), profileDownloadUrl: [],
-                                                              uid: "")!)
+                                                   user: User.UserBuilder().build())
 
         return cell
 

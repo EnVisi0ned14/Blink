@@ -22,7 +22,13 @@ public class RegistrationManager {
     }
     
     public func logUserIn(user: User) {
+        
+        //Update current user
         currentUser = user
+        
+        //Notify observers that user logged in
+        NotificationCenter.default.post(name: Notification.Name(rawValue: USER_LOGGED_IN),
+                                        object: nil)
     }
     
     public func logUserOut() {
@@ -37,19 +43,13 @@ public class RegistrationManager {
     public func registerUser(withCredentials credentials: AuthCredentials,
                                     completion: @escaping RegistrationCallback) {
         
-        guard let safeProfilePicture = credentials.profilePicutre,
-              let safeEmail = credentials.email,
-              let safePassword = credentials.password else {
-            completion(.failure(RegistrationErrors.credentialIsNil))
-            return
-            
-        }
         
         //Upload the image to the database
-        Service.uploadImage(image: safeProfilePicture) { imageUrl in
+        Service.uploadImage(image: credentials.profilePicutre) { imageUrl in
             
             //Create the user
-            Auth.auth().createUser(withEmail: safeEmail, password: safePassword) { [weak self] result, error in
+            Auth.auth().createUser(withEmail: credentials.email,
+                                   password: credentials.password) { [weak self] result, error in
                 
                 //Check for errors
                 guard error == nil else {
@@ -62,16 +62,23 @@ public class RegistrationManager {
                     self?.returnError(error: .failedToCreateUid, completion: completion)
                     return
                 }
-                
-                //Create data for user
-                guard let user = User(with: credentials,
-                                      profileDownloadUrl: [imageUrl],
-                                      uid: uid) else {
-                    self?.returnError(error: .failedToCreateUser, completion: completion)
-                    return
-                }
-                
-                self?.uploadUserToFirestore(for: user, completion: completion)
+
+                //Create user builder
+                let userBuilder = User.UserBuilder()
+                    .setUid(uid: uid)
+                    .setEmail(email: credentials.email)
+                    .setGender(gender: credentials.gender)
+                    .setPreference(preference: credentials.preference)
+                    .setBirthday(birthday: credentials.birthday)
+                    .setFirstName(firstName: credentials.firstName)
+                    .setLastName(lastName: credentials.lastName)
+                    .setProfilePictures(profilePictures: [imageUrl])
+                    .setGeoHash(geoHash: credentials.location.geoHash)
+                    .setLatitude(latitude: credentials.location.latitude)
+                    .setLongitude(longitude: credentials.location.longitude)
+
+                //Upload user to firestore
+                self?.uploadUserToFirestore(for: userBuilder.build(), completion: completion)
                 
             }
         }
@@ -80,13 +87,12 @@ public class RegistrationManager {
     private func uploadUserToFirestore(for user: User,
                                        completion: @escaping RegistrationCallback) {
         
-        let userNode = user.getUserNode()
         
         //Grab collection based off of gender
         let collection = user.userSettings.gender == .male ? COLLECTION_MALE_USERS : COLLECTION_FEMALE_USERS
         
         //Set the data
-        collection.document(user.uid).setData(userNode) { [weak self] error in
+        collection.document(user.uid).setData(user.getUserNode()) { [weak self] error in
             
             guard error == nil else {
                 self?.returnError(error: .failedToUploadToFirestore, completion: completion)
@@ -96,11 +102,7 @@ public class RegistrationManager {
             
             self?.updateUserLocation(for: user, completion: completion)
             
-
-            
         }
-        
-        
     }
     
     public func updateUserLocation(for user: User, completion: @escaping RegistrationCallback) {
@@ -111,7 +113,6 @@ public class RegistrationManager {
         
         //Get collection based on gender
         let collection = user.userSettings.gender == .male ? COLLECTION_LOCATION_MALE : COLLECTION_LOCATION_FEMALE
-        
         
         //Set location
         collection.setLocation(geopoint: geoPoint, forDocumentWithID: user.uid) { [weak self] error in

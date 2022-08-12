@@ -35,6 +35,8 @@
 		48786C0B28A4716B005F5146 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48786C0A28A4716B005F5146 /* UserProfile.swift */; };
 		48786C0D28A47180005F5146 /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48786C0C28A47180005F5146 /* UserSettings.swift */; };
 		48786C0F28A471A1005F5146 /* AuthCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48786C0E28A471A1005F5146 /* AuthCredentials.swift */; };
+		48786C1128A56C56005F5146 /* CardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48786C1028A56C56005F5146 /* CardViewModel.swift */; };
+		48786C1328A5D562005F5146 /* StatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48786C1228A5D561005F5146 /* StatsViewController.swift */; };
 		48EE63D9288DD477004682FA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48EE63D8288DD477004682FA /* AppDelegate.swift */; };
 		48EE63DB288DD477004682FA /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48EE63DA288DD477004682FA /* SceneDelegate.swift */; };
 		48EE63E2288DD478004682FA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 48EE63E1288DD478004682FA /* Assets.xcassets */; };
@@ -103,6 +105,8 @@
 		48786C0A28A4716B005F5146 /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
 		48786C0C28A47180005F5146 /* UserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettings.swift; sourceTree = "<group>"; };
 		48786C0E28A471A1005F5146 /* AuthCredentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthCredentials.swift; sourceTree = "<group>"; };
+		48786C1028A56C56005F5146 /* CardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardViewModel.swift; sourceTree = "<group>"; };
+		48786C1228A5D561005F5146 /* StatsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsViewController.swift; sourceTree = "<group>"; };
 		48EE63D5288DD477004682FA /* Blink.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Blink.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		48EE63D8288DD477004682FA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		48EE63DA288DD477004682FA /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -180,6 +184,12 @@
 		48786BD6289C3582005F5146 /* RegistrationViews */ = {
 			isa = PBXGroup;
 			children = (
+				48786BDC289C6190005F5146 /* BackButton.swift */,
+				48786BE4289CB1AD005F5146 /* BirthdayTextField.swift */,
+				48786BE6289CB241005F5146 /* SingleLineTextField.swift */,
+				48786BE8289D87A0005F5146 /* BirthdayTile.swift */,
+				48786BEC28A0141E005F5146 /* SelectButton.swift */,
+				48786BEE28A01651005F5146 /* SelectView.swift */,
 				48786BD1289C2852005F5146 /* RegistrationLabel.swift */,
 				48786BD3289C3298005F5146 /* BlinkButton.swift */,
 			);
@@ -204,6 +214,17 @@
 				48786C0828A348A4005F5146 /* DateManager.swift */,
 			);
 			path = Managers;
+			sourceTree = "<group>";
+		};
+		48786C1428A5D576005F5146 /* MatchScreens */ = {
+			isa = PBXGroup;
+			children = (
+				48EE63F1288DD4F1004682FA /* MatchScreenViewController.swift */,
+				48786C1228A5D561005F5146 /* StatsViewController.swift */,
+				48EE641A2899DCDB004682FA /* SettingsViewController.swift */,
+				48EE640E288E2596004682FA /* ProfileViewController.swift */,
+			);
+			path = MatchScreens;
 			sourceTree = "<group>";
 		};
 		48EE63CC288DD477004682FA = {
@@ -253,13 +274,6 @@
 				48EE6407288E1CD6004682FA /* PersonDescriptor */,
 				48EE63FD288DE353004682FA /* MatchTopStack */,
 				48EE63FF288DE393004682FA /* CardView.swift */,
-				48786BDC289C6190005F5146 /* BackButton.swift */,
-				48786BE4289CB1AD005F5146 /* BirthdayTextField.swift */,
-				48786BE6289CB241005F5146 /* SingleLineTextField.swift */,
-				48786BE8289D87A0005F5146 /* BirthdayTile.swift */,
-				48786BEC28A0141E005F5146 /* SelectButton.swift */,
-				48786BEE28A01651005F5146 /* SelectView.swift */,
-				48786BF728A0880E005F5146 /* BlinkRangeSlider.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -268,12 +282,10 @@
 			isa = PBXGroup;
 			children = (
 				48EE6428289AF80A004682FA /* Login And Registration */,
-				48EE63F1288DD4F1004682FA /* MatchScreenViewController.swift */,
+				48786C1428A5D576005F5146 /* MatchScreens */,
 				48EE640A288E1F69004682FA /* ConversationViewController.swift */,
 				48EE6408288E1F3D004682FA /* HomeViewController.swift */,
 				48EE640C288E1F7F004682FA /* BlinkPlusViewController.swift */,
-				48EE640E288E2596004682FA /* ProfileViewController.swift */,
-				48EE641A2899DCDB004682FA /* SettingsViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -283,6 +295,7 @@
 			children = (
 				48EE6410288E2EAA004682FA /* ProfileViewModel.swift */,
 				48EE641E2899E714004682FA /* SettingsViewModel.swift */,
+				48786C1028A56C56005F5146 /* CardViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -378,6 +391,7 @@
 		48EE642B289AF874004682FA /* SettingViews */ = {
 			isa = PBXGroup;
 			children = (
+				48786BF728A0880E005F5146 /* BlinkRangeSlider.swift */,
 				48EE6422289AE016004682FA /* BlinkPlusButton.swift */,
 				48EE6426289AF024004682FA /* LogoutTableViewFooter.swift */,
 			);
@@ -532,6 +546,7 @@
 				48EE6400288DE393004682FA /* CardView.swift in Sources */,
 				48EE63D9288DD477004682FA /* AppDelegate.swift in Sources */,
 				48EE6423289AE016004682FA /* BlinkPlusButton.swift in Sources */,
+				48786C1328A5D562005F5146 /* StatsViewController.swift in Sources */,
 				48EE640F288E2596004682FA /* ProfileViewController.swift in Sources */,
 				48786BE7289CB241005F5146 /* SingleLineTextField.swift in Sources */,
 				48EE63F4288DD52D004682FA /* MatchScreenTopStackView.swift in Sources */,
@@ -543,6 +558,7 @@
 				48786BFC28A1772B005F5146 /* LogoutTableViewCell.swift in Sources */,
 				48EE63F2288DD4F1004682FA /* MatchScreenViewController.swift in Sources */,
 				48EE6427289AF024004682FA /* LogoutTableViewFooter.swift in Sources */,
+				48786C1128A56C56005F5146 /* CardViewModel.swift in Sources */,
 				48EE6402288DFC85004682FA /* PersonDescriptor.swift in Sources */,
 				48786BD4289C3298005F5146 /* BlinkButton.swift in Sources */,
 				48EE6438289B124A004682FA /* User.swift in Sources */,

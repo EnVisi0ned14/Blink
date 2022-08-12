@@ -9,13 +9,15 @@ import UIKit
 
 public struct AuthCredentials {
     
-    var email: String?
-    var firstName: String?
-    var lastName: String?
-    var password: String?
-    var birthday: Date?
-    var gender: Gender?
-    var preference: Gender?
-    var profilePicutre: UIImage?
-    var location: Location?
+    //Uses default values
+    var email: String = ""
+    var firstName: String = ""
+    var lastName: String = ""
+    var password: String = ""
+    var birthday: Date = Date()
+    var gender: Gender = .male
+    var preference: Gender = .male
+    var profilePicutre: UIImage = UIImage(systemName: "plus")!
+    var location: Location = Location(longitude: 0, latitude: 0, geoHash: "")
+    
 }
