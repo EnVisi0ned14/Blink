@@ -21,7 +21,7 @@ class MatchScreenTopStackView: UIStackView {
     
     private let blinkLabel: BlinkLabel = BlinkLabel(blinkLabelType: .topStack)
     private let settingsIcon: SettingsIcon = SettingsIcon(frame: .zero)
-    private let profileIcon: ProfileIcon = ProfileIcon()
+    private let profileIcon: ProfileIcon = ProfileIcon(frame: .zero)
     
     public weak var delegate: MatchScreenTopStackViewDelegate?
     
@@ -55,18 +55,27 @@ class MatchScreenTopStackView: UIStackView {
     
     //MARK: - Helpers
     
+    public func setProfilePicture(with url: URL) {
+        profileIcon.setProfilePicture(with: url)
+    }
+    
     /**
     Sets the stack view's fields
      */
     private func setStackFields() {
         //Set the height
-        heightAnchor.constraint(equalToConstant: MATCHSCREEN_TOP_STACK_VIEW_HEIGHT).isActive = true
+        constrainHeight(MATCHSCREEN_TOP_STACK_VIEW_HEIGHT)
         //Sets the distribution
         distribution = .equalCentering
         //Respects margins
         isLayoutMarginsRelativeArrangement = true
         //Assigns margins
         layoutMargins = .init(top: 0, left: 16, bottom: 0, right: 32)
+    }
+    
+    public func hideSettingsAndProfile() {
+        profileIcon.isHidden = true
+        settingsIcon.isHidden = true
     }
 }
 

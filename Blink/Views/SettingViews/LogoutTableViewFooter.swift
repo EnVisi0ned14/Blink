@@ -11,7 +11,7 @@ protocol LogoutTableViewFooterDelegate: AnyObject {
     func wantsToLogout()
 }
 
-class LogoutTableViewFooter: UIView {
+class LogoutTableViewFooter: UITableViewHeaderFooterView {
     
     
     //MARK: - Fields
@@ -21,17 +21,23 @@ class LogoutTableViewFooter: UIView {
     public weak var delegate: LogoutTableViewFooterDelegate?
 
     //MARK: - Lifecycle
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        
-        configureUI()
+    
+    override init(reuseIdentifier: String?) {
+        super.init(reuseIdentifier: reuseIdentifier)
         
         addTapGesture()
         
     }
     
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        configureUI()
     }
     
     //MARK: - Actions
@@ -67,6 +73,8 @@ class LogoutTableViewFooter: UIView {
         //Center logout label
         logoutLabel.centerX(inView: self)
         logoutLabel.centerY(inView: self)
+
+        
         
     }
 

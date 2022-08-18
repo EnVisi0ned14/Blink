@@ -32,7 +32,13 @@ public class RegistrationManager {
     }
     
     public func logUserOut() {
+        
+        //Log user out
         currentUser = nil
+        
+        //Notify observers that user logged out
+        NotificationCenter.default.post(name: Notification.Name(USER_LOGGED_OUT),
+                                        object: nil)
     }
     
     public typealias RegistrationCallback = (Result<User, Error>) -> Void

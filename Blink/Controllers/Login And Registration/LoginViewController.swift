@@ -6,12 +6,14 @@
 //
 
 import UIKit
+import FirebaseAuth
+import JGProgressHUD
 
 class LoginViewController: UIViewController {
 
     private let emailTextField = LoginTextField(placeHolder: "Email", isPassword: false)
     
-    private let passwordTextField = LoginTextField(placeHolder: "Password", isPassword: false)
+    private let passwordTextField = LoginTextField(placeHolder: "Password", isPassword: true)
     
     private let loginButton: LoginButton = LoginButton()
     
@@ -20,6 +22,8 @@ class LoginViewController: UIViewController {
     private let noAccountLabel: NoAccountLabel = NoAccountLabel()
     
     private let signUpButton: SignUpButton = SignUpButton()
+    
+    private let hud = JGProgressHUD(style: .dark)
     
     //MARK: - Lifecycle
     override func viewDidLoad() {
@@ -30,6 +34,9 @@ class LoginViewController: UIViewController {
         
         //Set up delegates
         signUpButton.delegate = self
+        
+        //Add targets
+        loginButton.addTarget(self, action: #selector(loginTapped), for: .touchUpInside)
     }
     
     //Hide the navigation bar
@@ -42,6 +49,58 @@ class LoginViewController: UIViewController {
         //Hide tab bar
         tabBarController?.tabBar.isHidden = true
         
+    }
+    
+    //MARK: - Actions
+    
+    @objc private func loginTapped(_ loginButton: UIButton) {
+        
+        //Get email and password
+        guard let email = emailTextField.text else { return }
+        guard let password = passwordTextField.text else { return }
+        
+        //Show hud
+        hud.show(in: view)
+        
+        //Sign in user with firebase auth
+        Auth.auth().signIn(withEmail: email, password: password) { [weak self] result, error in
+            
+            //Check for error
+            guard error == nil else {
+                self?.loginFailed(error: error!)
+                return
+            }
+            
+            //Get uid
+            guard let uid = Auth.auth().currentUser?.uid else { return }
+            
+            //Fetch user
+            Service.fetchUser(withUid: uid) { [weak self] user in
+                //Log user in locally
+                RegistrationManager.shared.logUserIn(user: user)
+                
+                //Remove hud
+                self?.hud.dismiss()
+                
+                //Pop log in screen
+                self?.navigationController?.popToRootViewController(animated: true)
+            }
+            
+        }
+        
+    }
+    
+    private func loginFailed(error: Error) {
+        
+        //Remove hud
+        hud.dismiss()
+        
+        //Shake both tiles
+        emailTextField.shake()
+        passwordTextField.shake()
+        
+        //Print error
+        print("DEBUG: Error logging user in \(error.localizedDescription)")
     }
     
     //MARK: - Helpers
@@ -75,7 +134,8 @@ class LoginViewController: UIViewController {
         registrationStack.centerX(inView: view)
         registrationStack.anchor(top: loginStack.bottomAnchor, paddingTop: 5)
         
-        
+        //Set hud text
+        hud.textLabel.text = "Logging In"
         
         
     }

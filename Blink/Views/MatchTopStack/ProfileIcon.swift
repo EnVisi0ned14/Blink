@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 protocol ProfileIconDelegate: AnyObject {
     
@@ -24,8 +25,8 @@ class ProfileIcon: UIImageView {
     
     //MARK: - Lifecycle
     
-    init() {
-        super.init(image: UIImage(named: "daisy"))
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         
         //Set the image view's constraints
         setImageViewConstraints()
@@ -35,6 +36,7 @@ class ProfileIcon: UIImageView {
         
         //Set up the tap gesture
         setUpTapGesture()
+        
     }
     
     //Required decoder
@@ -49,7 +51,12 @@ class ProfileIcon: UIImageView {
         delegate?.wantsToDisplayProfileController()
     }
     
+    
     //MARK: - Helper
+    
+    public func setProfilePicture(with url: URL) {
+        sd_setImage(with: url)
+    }
     
     private func setUpTapGesture() {
         
@@ -76,6 +83,12 @@ class ProfileIcon: UIImageView {
         
         //Adds user interaction
         isUserInteractionEnabled = true
+        
+        //Set border width
+        layer.borderWidth = 1
+        
+        //Set border color
+        layer.borderColor = UIColor.lightGray.cgColor
     }
     
     /**

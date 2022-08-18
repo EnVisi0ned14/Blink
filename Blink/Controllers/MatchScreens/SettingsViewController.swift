@@ -6,44 +6,94 @@
 //
 
 import UIKit
-
+import JGProgressHUD
+import FirebaseAuth
 
 class SettingsViewController: UIViewController {
 
-    private let SECTION_COUNT: Int = 1
+    private let user: User
     
-    private let tableView: UITableView = {
-        let tableView = UITableView()
-        tableView.register(SettingsSliderTableViewCell.self,
-                           forCellReuseIdentifier: SettingsSliderTableViewCell.identifier)
-        tableView.register(SettingsGenderTableViewCell.self,
-                           forCellReuseIdentifier: SettingsGenderTableViewCell.identifier)
-        tableView.backgroundColor = #colorLiteral(red: 0.9567686915, green: 0.9569286704, blue: 0.9567475915, alpha: 1)
-        return tableView
-    }()
+    private let cells: [[SettingsSection]] = [
+    [.accountSection(.distance),
+     .accountSection(.age),
+     .accountSection(.genderPreference),
+     .accountSection(.genderSelection)],
+    [.logoutSection(.logout)]]
+
+    private let hud = JGProgressHUD(style: .dark)
+    
+    private let tableView = BlinkTableView(for: .settingsTableView)
     
     private let tableViewHeader: BlinkPlusTableViewHeader = BlinkPlusTableViewHeader()
     
-    private let tableViewFooter: LogoutTableViewFooter = LogoutTableViewFooter()
-    
     //MARK: - Lifecycle
+    
+    init(user: User) {
+        self.user = user
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+    
+        //Configure Navigation Bar
+        configureNavigationBar()
+        
+        //Handle delegates
+        tableViewHeader.delegate = self
+        tableView.delegate = self
+        tableView.dataSource = self
+
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         
         //Configure the UI
         configureUI()
         
-        //Handle delegates
-        tableViewHeader.delegate = self
-        tableViewFooter.delegate = self
-        tableView.delegate = self
-        tableView.dataSource = self
+    }
+    
+    //MARK: - Actions
+    
+    @objc private func handleDone() {
+    
+        //Display hud
+        hud.show(in: tableView)
         
-
+        //Saver user data
+        Service.saveUserData(for: user) { [weak self] error in
+            
+            //Remove hud
+            self?.hud.dismiss()
+            
+            //Pop view controller
+            self?.navigationController?.popViewController(animated: true)
+            
+            guard error == nil else {
+                print("DEBUG: Failed to save user data")
+                return
+            }
+            
+        }
         
     }
     
     //MARK: - Helpers
+    
+    private func configureNavigationBar() {
+        
+        //Right bar button
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(handleDone))
+        
+        //Hide back button
+        navigationItem.setHidesBackButton(true, animated: false)
+    }
+    
     private func configureUI() {
         //Add tableView
         view.addSubview(tableView)
@@ -51,12 +101,10 @@ class SettingsViewController: UIViewController {
         tableView.fillSuperview()
         //Set frame for header
         tableViewHeader.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 150)
-        //Set frame for footer
-        tableViewFooter.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
+        //Set the frame for footer
+        tableView.tableFooterView = UIView()
         //Set header
         tableView.tableHeaderView = tableViewHeader
-        //Set footer
-        tableView.tableFooterView = tableViewFooter
         
         //Set the background color
         view.backgroundColor = .white
@@ -67,16 +115,48 @@ class SettingsViewController: UIViewController {
         //Set the navigation title
         title = "Settings"
         
+        //Set the hud title
+        hud.textLabel.text = "Saving Changes"
+        
+    }
+    
+    private func handleLogout() {
+        
+        do {
+            //Try to sign out
+            try Auth.auth().signOut()
+            
+            //Log user out
+            RegistrationManager.shared.logUserOut()
+            
+            //Pop view controller
+            navigationController?.popViewController(animated: true)
+            
+        }
+        catch (let error) {
+            print("DEBUG: Error signing user out \(error.localizedDescription)")
+        }
         
     }
     
 
 }
 
-
 //MARK: - TableViewDelegate
-
 extension SettingsViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        let cell = cells[indexPath.section][indexPath.row]
+        
+        switch cell {
+        case .accountSection(_):
+            tableView.deselectRow(at: indexPath, animated: false)
+        case .logoutSection(_):
+            handleLogout()
+        }
+        
+    }
     
 }
 
@@ -99,37 +179,46 @@ extension SettingsViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 4
+        return cells[section].count
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return SECTION_COUNT
+        return cells.count
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "Account Settings"
+        return cells[section][0].titleForSection
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        
-        guard let cell = SettingSection(rawValue: indexPath.row) else { return 0 }
-        
-        return cell.cellHeight
+        return cells[indexPath.section][indexPath.row].cellHeight
     }
+    
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        guard let settingsCell = SettingSection(rawValue: indexPath.row) else { return UITableViewCell() }
-        
-        let cell = tableView.dequeueReusableCell(withIdentifier: settingsCell.identifier) as! PreferenceCellTableViewCell
-        cell.settingsViewModel = SettingsViewModel(section: settingsCell,
-                                                   user: User.UserBuilder().build())
+        //Grab cell model for section and row
+        let cellModel = cells[indexPath.section][indexPath.row]
 
+        //Create cell
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellModel.identifier) as! PreferenceCellTableViewCell
+        
+        
+        //Assign settings view model
+        cell.settingsViewModel = SettingsViewModel(section: AccountSettingsSection(rawValue: indexPath.row)!, user: user)
+      
+        
+        //Return cell
         return cell
 
     }
     
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return cells[section][0].heightForHeader
+    }
     
+    
+
 }
 
 
@@ -142,13 +231,4 @@ extension SettingsViewController: BlinkPlusTableViewHeaderDelegate {
     }
 }
 
-//MARK: - LogoutTableViewFooterDelegate
 
-extension SettingsViewController: LogoutTableViewFooterDelegate {
-    
-    func wantsToLogout() {
-        print("DEBUG: Logout tapped...")
-    }
-    
-    
-}

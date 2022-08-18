@@ -10,23 +10,24 @@ import UIKit
 enum ProfileSection: Int, CaseIterable {
     
     case name
-    case profession
-    case age
     case bio
+    case school
+    case profession
     
     var description: String {
         switch self {
         case .name: return "Name"
-        case .profession: return "Profession"
-        case .age: return "Age"
         case .bio: return "Bio"
+        case .profession: return "Occupation"
+        case .school: return "School"
+        
         }
     }
 }
 
 struct ProfileViewModel {
     
-    private let user: User
+    public let user: User
     
     let section: ProfileSection
     
@@ -37,7 +38,7 @@ struct ProfileViewModel {
         //self.user = user
         self.section = section
         self.user = user
-        
+
         placeHolderText = "Enter \(section.description.lowercased()).."
         
         switch section {
@@ -46,8 +47,8 @@ struct ProfileViewModel {
             value = user.userProfile.fullName
         case .profession:
             value = user.userProfile.occupation
-        case .age:
-            value = "\(user.userProfile.age ?? 0)"
+        case .school:
+            value = user.userProfile.school
         case .bio:
             value = user.userProfile.bio
         }

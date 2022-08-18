@@ -53,6 +53,12 @@ class LoginTextField: UITextField {
         //Set secure text entry
         isSecureTextEntry = isPassword
         
+        //Remove auto capitalization
+        autocapitalizationType = .none
+        
+        //Remove auto correction
+        autocorrectionType = .no
+        
         //Set keyboard type
         keyboardType = isPassword ? .alphabet : .emailAddress
         

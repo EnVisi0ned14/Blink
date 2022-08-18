@@ -7,7 +7,7 @@
 
 import UIKit
 
-class BlinkButton: UIButton {
+public class BlinkButton: UIButton {
 
     //MARK: - Fields
     

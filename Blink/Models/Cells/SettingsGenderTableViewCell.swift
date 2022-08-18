@@ -43,6 +43,7 @@ class SettingsGenderTableViewCell: PreferenceCellTableViewCell {
         else {
             selectionLabel.text = settingsViewModel.genderText
         }
+
         
     }
     

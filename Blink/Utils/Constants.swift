@@ -13,7 +13,8 @@ import Geofirestore
 let COLLECTION_MALE_USERS = Firestore.firestore().collection("male_users")
 let COLLECTION_FEMALE_USERS = Firestore.firestore().collection("female_users")
 let COLLECTION_SWIPES = Firestore.firestore().collection("swipes")
-
+let COLLECTION_MATCHES = Firestore.firestore().collection(MATCHES)
+let MATCHES = "matches"
 
 let COLLECTION_LOCATION_MALE = GeoFirestore(collectionRef: COLLECTION_MALE_USERS)
 let COLLECTION_LOCATION_FEMALE = GeoFirestore(collectionRef: COLLECTION_FEMALE_USERS)
@@ -21,6 +22,7 @@ let COLLECTION_LOCATION_FEMALE = GeoFirestore(collectionRef: COLLECTION_FEMALE_U
 
 //MARK: - Observer Constants
 let USER_LOGGED_IN = "User_Logged_In"
+let USER_LOGGED_OUT = "User_Logged_Out"
 
 
 //MARK: - User Constants
@@ -40,6 +42,7 @@ let BIO = "bio"
 let BIRTHDAY = "birthday"
 let FIRST_NAME = "first_name"
 let LAST_NAME = "last_name"
+let FULL_NAME = "full_name"
 let PROFILE_PICTURES = "profile_pictures"
 
 //User settings
@@ -60,3 +63,5 @@ let USER_PROFILE = "user_profile"
 let USER_SETTINGS = "user_settings"
 
 
+//Conversation
+let LATEST_MESSAGE = "latest_message"

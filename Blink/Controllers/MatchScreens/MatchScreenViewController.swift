@@ -49,6 +49,8 @@ class MatchScreenViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         //Hides the navigation bar
         navigationController?.navigationBar.isHidden = true
+        //Hide tab bar
+        tabBarController?.tabBar.isHidden = false
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -67,14 +69,27 @@ class MatchScreenViewController: UIViewController {
             name: Notification.Name(USER_LOGGED_IN),
             object: nil)
         
+        //Logout observers
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleLogout),
+            name: Notification.Name(USER_LOGGED_OUT),
+            object: nil)
+        
     }
     
     @objc private func userLoggedIn(notification: NSNotification) {
         
         guard let user = RegistrationManager.shared.getCurrentUser() else { return }
-
+        guard let profileUrl = URL(string: user.userProfile.profilePictures[0]) else { return }
+        
         print("DEBUG: Fetching and loading cards")
-        fetchAndLoadCards(for: user)
+        
+        //Update profile picture
+        //matchScreenTopStackView.setProfilePicture(with: profileUrl)
+        
+        //Fetch and load cards
+        //fetchAndLoadCards(for: user)
         
     }
     
@@ -112,6 +127,7 @@ class MatchScreenViewController: UIViewController {
             print("DEBUG: Found user logging in...")
             RegistrationManager.shared.logUserIn(user: user)
         }
+        
         
         
     }
@@ -162,6 +178,7 @@ class MatchScreenViewController: UIViewController {
     
     private func configureCards() {
         print("DEBUG: Configuring cards...")
+        
         viewModels.forEach { viewModel in
             let cardView = CardView(cardViewModel: viewModel)
             cardView.delegate = self
@@ -172,6 +189,50 @@ class MatchScreenViewController: UIViewController {
         cardViews = deckView.subviews.map({ $0 as! CardView })
         topCardView = cardViews.last
         
+    }
+    
+    private func presentMatchView(matchViewModel: MatchViewModel) {
+        
+        //Hide tab bar
+        tabBarController?.tabBar.isHidden = true
+        //Create match view
+        let matchView = MatchScreenView(viewModel: matchViewModel)
+        //Add as subview
+        view.addSubview(matchView)
+        //Fill superview
+        matchView.fillSuperview()
+    }
+    
+    private func saveSwipeAndCheckForMatch(forUser user: User, didLike: Bool) {
+        
+        Service.saveSwipe(forUser: user, isLike: didLike) { error in
+            self.topCardView = self.cardViews.last
+
+            guard didLike == true else { return }
+
+            Service.checkIfMatchExists(forUser: user) { didMatch in
+                guard didMatch else { return }
+                guard let currentUser = RegistrationManager.shared.getCurrentUser() else { return }
+ 
+                //Present match view
+                self.presentMatchView(matchViewModel: MatchViewModel(currentUser: currentUser, otherUser: user))
+                
+                //Upload match to database
+                Service.uploadMatch(currentUser: currentUser, matchedUser: user)
+            }
+        }
+    }
+    
+    @objc private func handleLogout() {
+    
+        //Remove card views
+        cardViews = []
+        
+        //Remove Cards
+        deckView.subviews.forEach({$0.removeFromSuperview()})
+        
+        //Present login controller
+        presentLoginController()
     }
     
 }
@@ -197,7 +258,9 @@ extension MatchScreenViewController: MatchScreenTopStackViewDelegate {
     
     func wantsToPresentSettingsController() {
         
-        let settingsVC = SettingsViewController()
+        guard let user = RegistrationManager.shared.getCurrentUser() else { return }
+        
+        let settingsVC = SettingsViewController(user: user)
         
         settingsVC.modalPresentationStyle = .fullScreen
         
@@ -206,6 +269,8 @@ extension MatchScreenViewController: MatchScreenTopStackViewDelegate {
         navigationController?.pushViewController(settingsVC, animated: true)
         
     }
+    
+    
     
 }
 
@@ -229,11 +294,13 @@ extension MatchScreenViewController: CardViewDelegate {
         view.removeFromSuperview()
         self.cardViews.removeAll(where: { view == $0})
         
-        //guard let user = topCardView?.cardViewModel.user else { return }
-        //self.saveSwipeAndCheckForMatch(forUser: user, didLike: didLikeUser)
+        guard let user = topCardView?.cardViewModel.user else { return }
+        self.saveSwipeAndCheckForMatch(forUser: user, didLike: didLikeUser)
         
         self.topCardView = cardViews.last
     }
     
     
 }
+
+

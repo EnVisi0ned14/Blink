@@ -19,17 +19,13 @@ class ProfileViewController: UIViewController {
     
     private let user: User
     
+    private lazy var newUserProfile = user.userProfile
+    
     private lazy var profileHeaderView = ProfileHeaderView(user: user)
     
     private let hud = JGProgressHUD(style: .dark)
     
-    private let tableView: UITableView = {
-        let tableView = UITableView()
-        tableView.register(ProfileTableViewCell.self, forCellReuseIdentifier: "ProfileTableViewCell")
-        tableView.separatorStyle = .none
-        tableView.backgroundColor = .white
-        return tableView
-    }()
+    private let tableView = BlinkTableView(for: .profileTableView)
 
     //MARK: - Lifecycle
     
@@ -50,8 +46,14 @@ class ProfileViewController: UIViewController {
         tableView.dataSource = self
         profileHeaderView.delegate = self
         
+        //Configure Observers
+        configureObservers()
+        
         //Configure the UI
         configureUI()
+        
+        //Configure Navigation Bar
+        configureNavigationBar()
         
     }
     
@@ -59,7 +61,73 @@ class ProfileViewController: UIViewController {
         navigationController?.navigationBar.isHidden = false
     }
     
+
+    
+    //MARK: - Actions
+    
+    @objc private func handleDone() {
+        
+        //Cancel editing
+        view.endEditing(true)
+        
+        //Update user profile locally
+        user.userProfile = newUserProfile
+        
+        //Show loading sign
+        hud.show(in: view)
+        
+        Service.saveUserData(for: user) { [weak self] error in
+            
+            //Dismiss hud
+            self?.hud.dismiss()
+            
+            //Check for error
+            guard error == nil else {
+                print("DEBUG: Error saving user data...")
+                return
+            }
+            
+            //Dismiss view
+            self?.navigationController?.popViewController(animated: true)
+            
+        }
+    }
+    
+    @objc private func handleCancel() {
+        navigationController?.popViewController(animated: true)
+    }
+    
+    /**
+        Handles updating tableView position to not cover text fields
+     */
+    @objc private func keyBoardWillShow(_ notification: NSNotification) {
+        
+        guard let info = notification.userInfo,
+              let keyboardFrameRect = info[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue
+                else { return }
+        
+        let keyboardRect = keyboardFrameRect.cgRectValue
+        let contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardRect.height, right: 0)
+        tableView.contentInset = contentInset
+        tableView.scrollIndicatorInsets = contentInset
+        
+    }
+    
     //MARK: - Helpers
+    
+    private func configureNavigationBar() {
+        //Left bar button
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(handleCancel))
+        
+        //Right bar button
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(handleDone))
+    }
+    
+    private func configureObservers() {
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyBoardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        
+    }
     
     private func configureUI() {
         
@@ -75,7 +143,7 @@ class ProfileViewController: UIViewController {
         //Add the tableView is a subView
         view.addSubview(tableView)
         
-        hud.textLabel.text = "Uploading Your Image"
+        hud.textLabel.text = "Uploading Data"
         
         //Fill Superview
         tableView.fillSuperview()
@@ -134,6 +202,7 @@ extension ProfileViewController: UITableViewDataSource {
         guard let section = ProfileSection(rawValue: indexPath.section) else { return cell }
         let viewModel = ProfileViewModel(section: section, user: user)
         cell.profileViewModel = viewModel
+        cell.delegate = self
         return cell
     }
     
@@ -176,5 +245,29 @@ extension ProfileViewController: ProfileHeaderViewDelegate {
                 }
             }
         }
+    }
+}
+
+
+extension ProfileViewController: ProfileTableViewCellDelegate {
+    
+    func settingsCell(_: UITableViewCell, wantsToUpdateUserWith value: String, for section: ProfileSection) {
+        
+        switch section {
+        case .bio:
+            newUserProfile.bio = value
+        case .name:
+            
+            if(value.contains(" ")) {
+                newUserProfile.firstName = String(value.split(separator: " ")[0])
+                newUserProfile.lastName = String(value.split(separator: " ")[1])
+            }
+
+        case .school:
+            newUserProfile.school = value
+        case .profession:
+            newUserProfile.occupation = value
+        }
+        
     }
 }

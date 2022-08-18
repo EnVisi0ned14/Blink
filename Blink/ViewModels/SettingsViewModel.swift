@@ -7,12 +7,82 @@
 
 import UIKit
 
-enum SettingSection: Int, CaseIterable {
+enum SettingsSection {
+    case logoutSection(LogoutSection)
+    case accountSection(AccountSettingsSection)
+    
+    var identifier: String {
+        switch self {
+        case .accountSection(let accountSection):
+            return accountSection.identifier
+        case .logoutSection(let logoutSection):
+            return logoutSection.identifier
+        }
+    }
+    
+    var cellHeight: CGFloat {
+        switch self {
+        case .accountSection(let accountSection):
+            return accountSection.cellHeight
+        case .logoutSection(let logoutSection):
+            return logoutSection.cellHeight
+        }
+    }
+    
+    var titleForSection: String {
+        switch self {
+        case .accountSection(let accountSection):
+            return accountSection.titleForSection
+        case .logoutSection(let logoutSection):
+            return logoutSection.titleForSection
+        }
+    }
+    
+    var heightForHeader: CGFloat {
+        switch self {
+        case .accountSection(let accountSection):
+            return accountSection.heightForHeader
+        case .logoutSection(let logoutSection):
+            return logoutSection.heightForHeader
+        }
+    }
+    
+}
+
+
+
+enum LogoutSection {
+    
+    case logout
+    
+    var heightForHeader: CGFloat {
+        return 50
+    }
+    
+    var cellHeight: CGFloat {
+        return 50
+    }
+    
+    var identifier: String {
+        return LogoutTableViewCell.identifier
+    }
+    
+    var titleForSection: String {
+        return ""
+    }
+    
+}
+
+enum AccountSettingsSection: Int {
     
     case distance
     case age
     case genderPreference
     case genderSelection
+    
+    var titleForSection: String {
+        return "Account Settings"
+    }
     
     var cellHeight: CGFloat {
         switch self {
@@ -41,15 +111,18 @@ enum SettingSection: Int, CaseIterable {
         }
     }
     
-    
-    
+    var heightForHeader: CGFloat {
+        return 30
+    }
 }
+
+
 
 struct SettingsViewModel {
     
-    public let section: SettingSection
+    public let section: AccountSettingsSection
     
-    private let user: User!
+    public let user: User!
     
     var cellLabel: String {
         return section.cellLabel
@@ -58,11 +131,11 @@ struct SettingsViewModel {
     var minSliderValue: CGFloat {
         
         if(section == .distance) {
-            return CGFloat(user.userSettings.distanceRange)
+            return 0
         }
         
         if(section == .age) {
-            return CGFloat(user.userSettings.minSeekingAge)
+            return 18
         }
         
         return 0
@@ -70,6 +143,21 @@ struct SettingsViewModel {
     }
     
     var maxSliderValue: CGFloat {
+        
+        if(section == .distance) {
+            return CGFloat(MAX_DISTANCE_RANGE)
+        }
+        
+        if(section == .age) {
+            return 60
+        }
+        
+        return 0
+        
+    }
+    
+    
+    var upperSliderValue: CGFloat {
         
         if(section == .distance) {
             return CGFloat(user.userSettings.distanceRange)
@@ -80,15 +168,15 @@ struct SettingsViewModel {
         }
         
         return 0
+    }
+    
+    var lowerSliderValue: CGFloat {
         
-    }
-    
-    var minDistanceSliderValue: CGFloat {
+        if(section == .age) {
+            return CGFloat(user.userSettings.minSeekingAge)
+        }
+        
         return 0
-    }
-    
-    var maxDistanceSliderValue: CGFloat {
-        return 50
     }
     
     var showMeText: String {
@@ -99,15 +187,19 @@ struct SettingsViewModel {
         return user.userSettings.gender == .male ? "Male" : "Female"
     }
     
-    func ageLabelText(forMin min: Int, forMax max: Int) -> String {
-        return "\(Int(min))-\(Int(max)) yr"
+    var ageLabelText: String {
+        return "\(user.userSettings.minSeekingAge)-\(user.userSettings.maxSeekingAge) yr"
     }
     
-    func distanceLabelText(forValue value: Int) -> String {
-        return "\(value) mi"
+    var distanceLabelText: String {
+        return "\(user.userSettings.distanceRange) mi"
     }
     
-    init(section: SettingSection, user: User) {
+    var shouldEnableDoubleSlider: Bool {
+        return section == .age
+    }
+    
+    init(section: AccountSettingsSection, user: User) {
         
         self.section = section
         self.user = user

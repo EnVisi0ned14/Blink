@@ -6,10 +6,17 @@
 //
 
 import UIKit
+import SDWebImage
 
 class ImageButton: UIButton {
 
     //MARK: - Lifecycle
+    
+    init(url: URL) {
+        super.init(frame: .zero)
+        
+        configureFields(withurl: url)
+    }
     
     init(image: UIImage) {
         super.init(frame: .zero)
@@ -28,6 +35,12 @@ class ImageButton: UIButton {
         
         //Set the image
         setImage(image, for: .normal)
+    }
+    
+    private func configureFields(withurl url: URL) {
+        
+        //Set the image
+        sd_setImage(with: url, for: .normal)
     }
 
 }

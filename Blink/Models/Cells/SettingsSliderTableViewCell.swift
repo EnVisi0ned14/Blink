@@ -50,7 +50,10 @@ class SettingsSliderTableViewCell: PreferenceCellTableViewCell {
         sliderStack.distribution = .fill
         sliderStack.spacing = 10
         contentView.addSubview(sliderStack)
+
         sliderStack.anchor(top: preferenceLabel.bottomAnchor, leading: leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor, padding: UIEdgeInsets(top: 20, left: 30, bottom: 10, right: 30))
+
+
 
     }
     
@@ -58,44 +61,44 @@ class SettingsSliderTableViewCell: PreferenceCellTableViewCell {
     public override func configure() {
         
         //Sets the number of handles
-        slider.disableRange = settingsViewModel.section == .distance ? true : false
+        slider.disableRange = !settingsViewModel.shouldEnableDoubleSlider
 
         //Assign the min
-        slider.minValue = settingsViewModel.minSliderValue
+        if(settingsViewModel.shouldEnableDoubleSlider) {
+            slider.minValue = settingsViewModel.minSliderValue
+            slider.selectedMinValue = settingsViewModel.lowerSliderValue
+        }
         
         //Assin the max
         slider.maxValue = settingsViewModel.maxSliderValue
+        slider.selectedMaxValue = settingsViewModel.upperSliderValue
         
-        //Assign the status label
-        updateStatusLabel()
+        //Update user and label
+        updateUserAndLabel()
 
         //Assign the text to the preference label
         preferenceLabel.text = settingsViewModel.cellLabel
         
-    }
-    
-    private func updateStatusLabel() {
         
-        //If the cell is for age
-        if(settingsViewModel.section == .age) {
-            
-            let minAge = Int(slider.selectedMinValue)
-            let maxAge = Int(slider.selectedMaxValue)
-            
-            statusLabel.text = settingsViewModel.ageLabelText(forMin: minAge, forMax: maxAge)
-        }
-        
-        //If the cell is for distance
-        if(settingsViewModel.section == .distance) {
-            
-            let maxDistance = Int(slider.selectedMaxValue)
-            
-            statusLabel.text = settingsViewModel.distanceLabelText(forValue: maxDistance)
-        }
         
     }
     
-
+    private func updateUserAndLabel() {
+        
+        switch settingsViewModel.section {
+        case .age:
+            settingsViewModel.user.userSettings.minSeekingAge = Int(slider.selectedMinValue)
+            settingsViewModel.user.userSettings.maxSeekingAge = Int(slider.selectedMaxValue)
+            statusLabel.text = settingsViewModel.ageLabelText
+        case .distance:
+            settingsViewModel.user.userSettings.distanceRange = Int(slider.selectedMaxValue)
+            statusLabel.text = settingsViewModel.distanceLabelText
+        default:
+            break
+            
+        }
+    }
+    
 
 }
 
@@ -104,8 +107,7 @@ extension SettingsSliderTableViewCell: RangeSeekSliderDelegate {
     
     //Detect changes in seek slider
     func rangeSeekSlider(_ slider: RangeSeekSlider, didChange minValue: CGFloat, maxValue: CGFloat) {
-        //Update status label
-        updateStatusLabel()
+        updateUserAndLabel()
     }
     
 }

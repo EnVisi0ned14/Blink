@@ -24,6 +24,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         //window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
         //window?.rootViewController = RegistrationPhotoViewController(user: RegisterUser())
         
+        if #available(iOS 13.0, *) {
+            window?.overrideUserInterfaceStyle = .light
+        }
+        
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -53,6 +57,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
     }
+    
+    
 
 
 }

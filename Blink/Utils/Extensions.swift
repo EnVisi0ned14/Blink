@@ -65,6 +65,22 @@ extension UIButton {
         
     }
     
+    func configureBorderGradient() {
+
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame =  CGRect(origin: .zero, size: frame.size)
+        gradientLayer.colors = [#colorLiteral(red: 0.9725490196, green: 0.4156862745, blue: 0.007843137255, alpha: 1).cgColor, #colorLiteral(red: 1, green: 0.4549019608, blue: 0.09019607843, alpha: 1).cgColor, #colorLiteral(red: 0.937254902, green: 0.4470588235, blue: 0.08235294118, alpha: 1).cgColor, #colorLiteral(red: 0.9764705882, green: 0.5058823529, blue: 0.1647058824, alpha: 1).cgColor, #colorLiteral(red: 0.968627451, green: 0.5960784314, blue: 0.3843137255, alpha: 1).cgColor]
+        
+        let shape = CAShapeLayer()
+        shape.lineWidth = 2
+        shape.path = UIBezierPath(roundedRect: bounds, cornerRadius: layer.cornerRadius).cgPath
+        shape.strokeColor = UIColor.black.cgColor
+        shape.fillColor = UIColor.clear.cgColor
+        gradientLayer.mask = shape
+
+        layer.addSublayer(gradientLayer)
+    }
+    
     func removeGradientLayer() {
         
         if let layers = layer.sublayers {

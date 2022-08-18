@@ -40,6 +40,20 @@
 		48786C0F28A471A1005F5146 /* AuthCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48786C0E28A471A1005F5146 /* AuthCredentials.swift */; };
 		48786C1128A56C56005F5146 /* CardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48786C1028A56C56005F5146 /* CardViewModel.swift */; };
 		48786C1328A5D562005F5146 /* StatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48786C1228A5D561005F5146 /* StatsViewController.swift */; };
+		4885688328A85EB70049D6C6 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4885688228A85EB70049D6C6 /* Match.swift */; };
+		4885688528A867830049D6C6 /* MatchScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4885688428A867830049D6C6 /* MatchScreenView.swift */; };
+		4885688728A867D90049D6C6 /* MatchImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4885688628A867D90049D6C6 /* MatchImageView.swift */; };
+		4885688928A871190049D6C6 /* MatchLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4885688828A871190049D6C6 /* MatchLabel.swift */; };
+		4885688D28A871F00049D6C6 /* BlinkBorderButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4885688C28A871F00049D6C6 /* BlinkBorderButton.swift */; };
+		4885688F28A886F90049D6C6 /* MatchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4885688E28A886F90049D6C6 /* MatchViewModel.swift */; };
+		4885689128AD64CA0049D6C6 /* HorizontalScrollableCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4885689028AD64CA0049D6C6 /* HorizontalScrollableCollectionView.swift */; };
+		4885689428AD67490049D6C6 /* MatchesCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4885689328AD67490049D6C6 /* MatchesCollectionViewCell.swift */; };
+		4885689828AD68AA0049D6C6 /* MatchProfileCellImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4885689728AD68AA0049D6C6 /* MatchProfileCellImageView.swift */; };
+		4885689A28AD6E860049D6C6 /* BlinkTopStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4885689928AD6E860049D6C6 /* BlinkTopStackView.swift */; };
+		4885689C28AD7BB00049D6C6 /* CollectionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4885689B28AD7BB00049D6C6 /* CollectionTableViewCell.swift */; };
+		4885689F28AE94330049D6C6 /* BlinkTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4885689E28AE94330049D6C6 /* BlinkTableView.swift */; };
+		488568A228AE97A00049D6C6 /* ConversationSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488568A128AE97A00049D6C6 /* ConversationSections.swift */; };
+		488568A428AE9DEE0049D6C6 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488568A328AE9DEE0049D6C6 /* Conversation.swift */; };
 		48EE63D9288DD477004682FA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48EE63D8288DD477004682FA /* AppDelegate.swift */; };
 		48EE63DB288DD477004682FA /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48EE63DA288DD477004682FA /* SceneDelegate.swift */; };
 		48EE63E2288DD478004682FA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 48EE63E1288DD478004682FA /* Assets.xcassets */; };
@@ -113,6 +127,20 @@
 		48786C0E28A471A1005F5146 /* AuthCredentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthCredentials.swift; sourceTree = "<group>"; };
 		48786C1028A56C56005F5146 /* CardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardViewModel.swift; sourceTree = "<group>"; };
 		48786C1228A5D561005F5146 /* StatsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsViewController.swift; sourceTree = "<group>"; };
+		4885688228A85EB70049D6C6 /* Match.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
+		4885688428A867830049D6C6 /* MatchScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchScreenView.swift; sourceTree = "<group>"; };
+		4885688628A867D90049D6C6 /* MatchImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchImageView.swift; sourceTree = "<group>"; };
+		4885688828A871190049D6C6 /* MatchLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchLabel.swift; sourceTree = "<group>"; };
+		4885688C28A871F00049D6C6 /* BlinkBorderButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlinkBorderButton.swift; sourceTree = "<group>"; };
+		4885688E28A886F90049D6C6 /* MatchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchViewModel.swift; sourceTree = "<group>"; };
+		4885689028AD64CA0049D6C6 /* HorizontalScrollableCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalScrollableCollectionView.swift; sourceTree = "<group>"; };
+		4885689328AD67490049D6C6 /* MatchesCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchesCollectionViewCell.swift; sourceTree = "<group>"; };
+		4885689728AD68AA0049D6C6 /* MatchProfileCellImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchProfileCellImageView.swift; sourceTree = "<group>"; };
+		4885689928AD6E860049D6C6 /* BlinkTopStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BlinkTopStackView.swift; path = Blink/Views/Buttons/BlinkTopStackView.swift; sourceTree = SOURCE_ROOT; };
+		4885689B28AD7BB00049D6C6 /* CollectionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionTableViewCell.swift; sourceTree = "<group>"; };
+		4885689E28AE94330049D6C6 /* BlinkTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlinkTableView.swift; sourceTree = "<group>"; };
+		488568A128AE97A00049D6C6 /* ConversationSections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationSections.swift; sourceTree = "<group>"; };
+		488568A328AE9DEE0049D6C6 /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
 		48EE63D5288DD477004682FA /* Blink.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Blink.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		48EE63D8288DD477004682FA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		48EE63DA288DD477004682FA /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -206,6 +234,7 @@
 				48786BEE28A01651005F5146 /* SelectView.swift */,
 				48786BD1289C2852005F5146 /* RegistrationLabel.swift */,
 				48786BD3289C3298005F5146 /* BlinkButton.swift */,
+				4885688C28A871F00049D6C6 /* BlinkBorderButton.swift */,
 			);
 			path = RegistrationViews;
 			sourceTree = "<group>";
@@ -239,6 +268,57 @@
 				48EE640E288E2596004682FA /* ProfileViewController.swift */,
 			);
 			path = MatchScreens;
+			sourceTree = "<group>";
+		};
+		4885688128A73E600049D6C6 /* User */ = {
+			isa = PBXGroup;
+			children = (
+				48EE6437289B124A004682FA /* User.swift */,
+				48786C0A28A4716B005F5146 /* UserProfile.swift */,
+				48786C0C28A47180005F5146 /* UserSettings.swift */,
+				48786C0E28A471A1005F5146 /* AuthCredentials.swift */,
+			);
+			path = User;
+			sourceTree = "<group>";
+		};
+		4885689228AD66C70049D6C6 /* CollectionViews */ = {
+			isa = PBXGroup;
+			children = (
+				4885689028AD64CA0049D6C6 /* HorizontalScrollableCollectionView.swift */,
+			);
+			path = CollectionViews;
+			sourceTree = "<group>";
+		};
+		4885689528AD683D0049D6C6 /* Buttons */ = {
+			isa = PBXGroup;
+			children = (
+				4874735128A5DD5E009852C1 /* ImageButton.swift */,
+			);
+			path = Buttons;
+			sourceTree = "<group>";
+		};
+		4885689628AD68840049D6C6 /* ImageViews */ = {
+			isa = PBXGroup;
+			children = (
+				4885689728AD68AA0049D6C6 /* MatchProfileCellImageView.swift */,
+			);
+			path = ImageViews;
+			sourceTree = "<group>";
+		};
+		4885689D28AE94200049D6C6 /* TableViews */ = {
+			isa = PBXGroup;
+			children = (
+				4885689E28AE94330049D6C6 /* BlinkTableView.swift */,
+			);
+			path = TableViews;
+			sourceTree = "<group>";
+		};
+		488568A028AE97640049D6C6 /* TabBarController */ = {
+			isa = PBXGroup;
+			children = (
+				48EE6408288E1F3D004682FA /* HomeViewController.swift */,
+			);
+			path = TabBarController;
 			sourceTree = "<group>";
 		};
 		48EE63CC288DD477004682FA = {
@@ -281,6 +361,10 @@
 		48EE63EC288DD4B0004682FA /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				4885689D28AE94200049D6C6 /* TableViews */,
+				4885689628AD68840049D6C6 /* ImageViews */,
+				4885689528AD683D0049D6C6 /* Buttons */,
+				4885689228AD66C70049D6C6 /* CollectionViews */,
 				4874734C28A5D9CA009852C1 /* StatViews */,
 				48786BD6289C3582005F5146 /* RegistrationViews */,
 				48786BD5289C3566005F5146 /* LoginViews */,
@@ -289,7 +373,9 @@
 				48EE6407288E1CD6004682FA /* PersonDescriptor */,
 				48EE63FD288DE353004682FA /* MatchTopStack */,
 				48EE63FF288DE393004682FA /* CardView.swift */,
-				4874735128A5DD5E009852C1 /* ImageButton.swift */,
+				4885688428A867830049D6C6 /* MatchScreenView.swift */,
+				4885688628A867D90049D6C6 /* MatchImageView.swift */,
+				4885688828A871190049D6C6 /* MatchLabel.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -297,10 +383,10 @@
 		48EE63ED288DD4B5004682FA /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				488568A028AE97640049D6C6 /* TabBarController */,
 				48EE6428289AF80A004682FA /* Login And Registration */,
 				48786C1428A5D576005F5146 /* MatchScreens */,
 				48EE640A288E1F69004682FA /* ConversationViewController.swift */,
-				48EE6408288E1F3D004682FA /* HomeViewController.swift */,
 				48EE640C288E1F7F004682FA /* BlinkPlusViewController.swift */,
 			);
 			path = Controllers;
@@ -311,7 +397,9 @@
 			children = (
 				48EE6410288E2EAA004682FA /* ProfileViewModel.swift */,
 				48EE641E2899E714004682FA /* SettingsViewModel.swift */,
+				488568A128AE97A00049D6C6 /* ConversationSections.swift */,
 				48786C1028A56C56005F5146 /* CardViewModel.swift */,
+				4885688E28A886F90049D6C6 /* MatchViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -319,11 +407,10 @@
 		48EE63EF288DD4C5004682FA /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				4885688128A73E600049D6C6 /* User */,
 				48EE6412288E2F1D004682FA /* Cells */,
-				48EE6437289B124A004682FA /* User.swift */,
-				48786C0A28A4716B005F5146 /* UserProfile.swift */,
-				48786C0C28A47180005F5146 /* UserSettings.swift */,
-				48786C0E28A471A1005F5146 /* AuthCredentials.swift */,
+				4885688228A85EB70049D6C6 /* Match.swift */,
+				488568A328AE9DEE0049D6C6 /* Conversation.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -341,6 +428,7 @@
 			isa = PBXGroup;
 			children = (
 				48EE63F3288DD52D004682FA /* MatchScreenTopStackView.swift */,
+				4885689928AD6E860049D6C6 /* BlinkTopStackView.swift */,
 				48EE63F7288DD6FF004682FA /* BlinkLabel.swift */,
 				48EE63F9288DD978004682FA /* SettingsIcon.swift */,
 				48EE63FB288DDB99004682FA /* ProfileIcon.swift */,
@@ -377,6 +465,8 @@
 				48786BF928A08D6D005F5146 /* SettingsGenderTableViewCell.swift */,
 				48786BFB28A1772B005F5146 /* LogoutTableViewCell.swift */,
 				4874734F28A5DAE3009852C1 /* StatsCollectionViewCell.swift */,
+				4885689328AD67490049D6C6 /* MatchesCollectionViewCell.swift */,
+				4885689B28AD7BB00049D6C6 /* CollectionTableViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -546,20 +636,28 @@
 				48EE640B288E1F69004682FA /* ConversationViewController.swift in Sources */,
 				48EE6436289B1118004682FA /* RegistrationEmailViewController.swift in Sources */,
 				48EE641F2899E714004682FA /* SettingsViewModel.swift in Sources */,
+				488568A428AE9DEE0049D6C6 /* Conversation.swift in Sources */,
 				48786BE9289D87A0005F5146 /* BirthdayTile.swift in Sources */,
 				48786BF328A02AE4005F5146 /* RegistrationPhotoViewController.swift in Sources */,
+				4885689F28AE94330049D6C6 /* BlinkTableView.swift in Sources */,
+				4885689A28AD6E860049D6C6 /* BlinkTopStackView.swift in Sources */,
 				48EE640D288E1F7F004682FA /* BlinkPlusViewController.swift in Sources */,
 				48EE641B2899DCDB004682FA /* SettingsViewController.swift in Sources */,
 				48EE6404288DFFDE004682FA /* StatsButton.swift in Sources */,
 				48786C0028A17FC8005F5146 /* RegistrationManager.swift in Sources */,
 				48786C0D28A47180005F5146 /* UserSettings.swift in Sources */,
+				4885688728A867D90049D6C6 /* MatchImageView.swift in Sources */,
+				4885689C28AD7BB00049D6C6 /* CollectionTableViewCell.swift in Sources */,
 				48EE64182899AC8B004682FA /* ProfileImageButton.swift in Sources */,
 				48EE6421289ADFAB004682FA /* BlinkPlusTableViewHeader.swift in Sources */,
+				4885689828AD68AA0049D6C6 /* MatchProfileCellImageView.swift in Sources */,
 				48EE6414288E2F2D004682FA /* ProfileTableViewCell.swift in Sources */,
 				48786BDF289C6E13005F5146 /* RegistrationPasswordViewController.swift in Sources */,
 				48786C0628A1C99C005F5146 /* LocationManager.swift in Sources */,
 				48EE63F6288DD68B004682FA /* Extensions.swift in Sources */,
 				48786BF828A0880E005F5146 /* BlinkRangeSlider.swift in Sources */,
+				4885688D28A871F00049D6C6 /* BlinkBorderButton.swift in Sources */,
+				4885688328A85EB70049D6C6 /* Match.swift in Sources */,
 				48EE6400288DE393004682FA /* CardView.swift in Sources */,
 				48EE63D9288DD477004682FA /* AppDelegate.swift in Sources */,
 				48EE6423289AE016004682FA /* BlinkPlusButton.swift in Sources */,
@@ -588,7 +686,10 @@
 				48786BE3289C800D005F5146 /* RegistrationBirthdayViewController.swift in Sources */,
 				4874735028A5DAE3009852C1 /* StatsCollectionViewCell.swift in Sources */,
 				48EE642F289AFA16004682FA /* LoginButton.swift in Sources */,
+				488568A228AE97A00049D6C6 /* ConversationSections.swift in Sources */,
+				4885689128AD64CA0049D6C6 /* HorizontalScrollableCollectionView.swift in Sources */,
 				48786BFA28A08D6D005F5146 /* SettingsGenderTableViewCell.swift in Sources */,
+				4885688528A867830049D6C6 /* MatchScreenView.swift in Sources */,
 				48786BE5289CB1AD005F5146 /* BirthdayTextField.swift in Sources */,
 				48786BEB289DC5C1005F5146 /* RegistrationGenderViewController.swift in Sources */,
 				48EE642D289AF897004682FA /* LoginTextField.swift in Sources */,
@@ -598,7 +699,10 @@
 				48786BED28A0141E005F5146 /* SelectButton.swift in Sources */,
 				48786C0B28A4716B005F5146 /* UserProfile.swift in Sources */,
 				48786BDB289C3B9C005F5146 /* Validator.swift in Sources */,
+				4885688F28A886F90049D6C6 /* MatchViewModel.swift in Sources */,
+				4885689428AD67490049D6C6 /* MatchesCollectionViewCell.swift in Sources */,
 				48786BD2289C2852005F5146 /* RegistrationLabel.swift in Sources */,
+				4885688928A871190049D6C6 /* MatchLabel.swift in Sources */,
 				4874735228A5DD5E009852C1 /* ImageButton.swift in Sources */,
 				48EE63FA288DD978004682FA /* SettingsIcon.swift in Sources */,
 				48786C0228A18336005F5146 /* Service.swift in Sources */,

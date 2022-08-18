@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol ProfileTableViewCellDelegate: AnyObject {
+    func settingsCell(_: UITableViewCell, wantsToUpdateUserWith value: String, for: ProfileSection)
+}
+
 class ProfileTableViewCell: UITableViewCell {
 
     //MARK: - Fields
@@ -30,18 +34,15 @@ class ProfileTableViewCell: UITableViewCell {
         return tf
     }()
     
+    weak var delegate: ProfileTableViewCellDelegate?
+    
     
     //MARK: - Lifecycle
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+
         
-        //Sets the selection style to none
-        selectionStyle = .none
-        
-        //Adds the input field
-        contentView.addSubview(inputField)
-        inputField.fillSuperview()
     }
     
     required init?(coder: NSCoder) {
@@ -50,9 +51,11 @@ class ProfileTableViewCell: UITableViewCell {
     
     //MARK: - Actions
     
-    @objc private func handleUpdateUserInfo() {
-        //TODO: API calls
+    @objc private func handleUpdateUserInfo(_ textField: UITextField) {
+        guard let value = textField.text else { return }
+        delegate?.settingsCell(self, wantsToUpdateUserWith: value, for: profileViewModel.section)
     }
+
     
     //MARK: - Helpers
     
@@ -64,6 +67,15 @@ class ProfileTableViewCell: UITableViewCell {
         
         //Assign the text for the input field
         inputField.text = profileViewModel.value
+        
+        //Sets the selection style to none
+        selectionStyle = .none
+        
+        //Adds the input field
+        contentView.addSubview(inputField)
+        
+        //Fill superview
+        inputField.fillSuperview()
     }
     
     
