@@ -54,6 +54,8 @@
 		4885689F28AE94330049D6C6 /* BlinkTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4885689E28AE94330049D6C6 /* BlinkTableView.swift */; };
 		488568A228AE97A00049D6C6 /* ConversationSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488568A128AE97A00049D6C6 /* ConversationSections.swift */; };
 		488568A428AE9DEE0049D6C6 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488568A328AE9DEE0049D6C6 /* Conversation.swift */; };
+		488568A628AE9FE30049D6C6 /* ConversationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488568A528AE9FE30049D6C6 /* ConversationTableViewCell.swift */; };
+		488568A828B151940049D6C6 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488568A728B151940049D6C6 /* ChatViewController.swift */; };
 		48EE63D9288DD477004682FA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48EE63D8288DD477004682FA /* AppDelegate.swift */; };
 		48EE63DB288DD477004682FA /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48EE63DA288DD477004682FA /* SceneDelegate.swift */; };
 		48EE63E2288DD478004682FA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 48EE63E1288DD478004682FA /* Assets.xcassets */; };
@@ -141,6 +143,8 @@
 		4885689E28AE94330049D6C6 /* BlinkTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlinkTableView.swift; sourceTree = "<group>"; };
 		488568A128AE97A00049D6C6 /* ConversationSections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationSections.swift; sourceTree = "<group>"; };
 		488568A328AE9DEE0049D6C6 /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
+		488568A528AE9FE30049D6C6 /* ConversationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationTableViewCell.swift; sourceTree = "<group>"; };
+		488568A728B151940049D6C6 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		48EE63D5288DD477004682FA /* Blink.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Blink.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		48EE63D8288DD477004682FA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		48EE63DA288DD477004682FA /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -388,6 +392,7 @@
 				48786C1428A5D576005F5146 /* MatchScreens */,
 				48EE640A288E1F69004682FA /* ConversationViewController.swift */,
 				48EE640C288E1F7F004682FA /* BlinkPlusViewController.swift */,
+				488568A728B151940049D6C6 /* ChatViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -467,6 +472,7 @@
 				4874734F28A5DAE3009852C1 /* StatsCollectionViewCell.swift */,
 				4885689328AD67490049D6C6 /* MatchesCollectionViewCell.swift */,
 				4885689B28AD7BB00049D6C6 /* CollectionTableViewCell.swift */,
+				488568A528AE9FE30049D6C6 /* ConversationTableViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -654,6 +660,7 @@
 				48EE6414288E2F2D004682FA /* ProfileTableViewCell.swift in Sources */,
 				48786BDF289C6E13005F5146 /* RegistrationPasswordViewController.swift in Sources */,
 				48786C0628A1C99C005F5146 /* LocationManager.swift in Sources */,
+				488568A628AE9FE30049D6C6 /* ConversationTableViewCell.swift in Sources */,
 				48EE63F6288DD68B004682FA /* Extensions.swift in Sources */,
 				48786BF828A0880E005F5146 /* BlinkRangeSlider.swift in Sources */,
 				4885688D28A871F00049D6C6 /* BlinkBorderButton.swift in Sources */,
@@ -705,6 +712,7 @@
 				4885688928A871190049D6C6 /* MatchLabel.swift in Sources */,
 				4874735228A5DD5E009852C1 /* ImageButton.swift in Sources */,
 				48EE63FA288DD978004682FA /* SettingsIcon.swift in Sources */,
+				488568A828B151940049D6C6 /* ChatViewController.swift in Sources */,
 				48786C0228A18336005F5146 /* Service.swift in Sources */,
 				48786BF128A01D8B005F5146 /* RegistrationPreferenceViewController.swift in Sources */,
 				48EE6433289B0BD7004682FA /* SignUpButton.swift in Sources */,

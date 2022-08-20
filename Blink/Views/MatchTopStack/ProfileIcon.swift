@@ -19,17 +19,15 @@ class ProfileIcon: UIImageView {
     
     //MARK: - Fields
     
-    private let PROFILE_ICON_WIDTH: CGFloat = 50
-    
     public weak var delegate: ProfileIconDelegate?
     
     //MARK: - Lifecycle
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(width: CGFloat? = nil, height: CGFloat? = nil) {
+        super.init(frame: .zero)
         
-        //Set the image view's constraints
-        setImageViewConstraints()
+        //Constrain profileIcon
+        configureConstraints(width: width, height: height)
         
         //Sets the image view's fields
         setImageViewFields()
@@ -44,6 +42,13 @@ class ProfileIcon: UIImageView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        //Set the image view to a circle
+        layer.cornerRadius = frame.width / 2
+    }
+    
     //MARK: - Actions
     
     @objc private func profileWasTapped() {
@@ -53,6 +58,18 @@ class ProfileIcon: UIImageView {
     
     
     //MARK: - Helper
+    
+    private func configureConstraints(width: CGFloat?, height: CGFloat?) {
+        
+        if let width = width {
+            constrainWidth(width)
+        }
+        
+        if let height = height {
+            constrainHeight(height)
+        }
+        
+    }
     
     public func setProfilePicture(with url: URL) {
         sd_setImage(with: url)
@@ -75,9 +92,6 @@ class ProfileIcon: UIImageView {
         //Set the content mode to aspect fit
         contentMode = .scaleAspectFill
         
-        //Set the image view to a circle
-        layer.cornerRadius = PROFILE_ICON_WIDTH / 2
-        
         //Clips the image to the imageView
         clipsToBounds = true
         
@@ -91,14 +105,6 @@ class ProfileIcon: UIImageView {
         layer.borderColor = UIColor.lightGray.cgColor
     }
     
-    /**
-     Sets the image view's constraints
-     */
-    private func setImageViewConstraints() {
-        
-        //Sets the frame to SETTINGS_ICON_WIDTH x SETTINGS_ICON_HEIGHT
-        constrainWidth(PROFILE_ICON_WIDTH)
-        
-    }
+
 
 }

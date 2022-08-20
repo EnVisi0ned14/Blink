@@ -17,7 +17,11 @@ class ConversationViewController: UIViewController {
     
     private let cells: [ConversationCellItem] = [MatchSection(), ConversationSection()]
     
-    private var matches: [Match] = [Match(name: "Ciel", profileImageUrl: "https://firebasestorage.googleapis.com:443/v0/b/blink-12ea7.appspot.com/o/images%2FEA325BA8-51F3-4F8A-9733-E531FF505FE0?alt=media&token=21acf61c-3247-4b7d-9ea1-054756593765", uid: ""), Match(name: "Ciel", profileImageUrl: "https://firebasestorage.googleapis.com:443/v0/b/blink-12ea7.appspot.com/o/images%2F5D037C48-4F92-4C0D-BF90-1EE51CD0B83C?alt=media&token=573d73d2-30d3-4e38-8e8c-a6216ffdb95b", uid: ""), Match(name: "Ciel", profileImageUrl: "https://firebasestorage.googleapis.com:443/v0/b/blink-12ea7.appspot.com/o/images%2FEA325BA8-51F3-4F8A-9733-E531FF505FE0?alt=media&token=21acf61c-3247-4b7d-9ea1-054756593765", uid: ""), Match(name: "Ciel", profileImageUrl: "https://firebasestorage.googleapis.com:443/v0/b/blink-12ea7.appspot.com/o/images%2FEA325BA8-51F3-4F8A-9733-E531FF505FE0?alt=media&token=21acf61c-3247-4b7d-9ea1-054756593765", uid: ""), Match(name: "Ciel", profileImageUrl: "https://firebasestorage.googleapis.com:443/v0/b/blink-12ea7.appspot.com/o/images%2FEA325BA8-51F3-4F8A-9733-E531FF505FE0?alt=media&token=21acf61c-3247-4b7d-9ea1-054756593765", uid: "")]
+    private var matches: [Match] = [Match]() {
+        didSet { converstationTableView.reloadData() }
+    }
+    
+    private var conversations: [Conversation] = [Conversation(fullName: "Michael Abrams", latestMessage: "Want to grab some food?", profileImageUrl: "https://firebasestorage.googleapis.com:443/v0/b/blink-12ea7.appspot.com/o/images%2FEA325BA8-51F3-4F8A-9733-E531FF505FE0?alt=media&token=21acf61c-3247-4b7d-9ea1-054756593765", uid: ""), Conversation(fullName: "Michael Abrams", latestMessage: "Want to grab some food?", profileImageUrl: "https://firebasestorage.googleapis.com:443/v0/b/blink-12ea7.appspot.com/o/images%2FEA325BA8-51F3-4F8A-9733-E531FF505FE0?alt=media&token=21acf61c-3247-4b7d-9ea1-054756593765", uid: ""), Conversation(fullName: "Michael Abrams", latestMessage: "Want to grab some food?", profileImageUrl: "https://firebasestorage.googleapis.com:443/v0/b/blink-12ea7.appspot.com/o/images%2FEA325BA8-51F3-4F8A-9733-E531FF505FE0?alt=media&token=21acf61c-3247-4b7d-9ea1-054756593765", uid: ""), Conversation(fullName: "Michael Abrams", latestMessage: "Want to grab some food?", profileImageUrl: "https://firebasestorage.googleapis.com:443/v0/b/blink-12ea7.appspot.com/o/images%2FEA325BA8-51F3-4F8A-9733-E531FF505FE0?alt=media&token=21acf61c-3247-4b7d-9ea1-054756593765", uid: ""), Conversation(fullName: "Michael Abrams", latestMessage: "Want to grab some food?", profileImageUrl: "https://firebasestorage.googleapis.com:443/v0/b/blink-12ea7.appspot.com/o/images%2FEA325BA8-51F3-4F8A-9733-E531FF505FE0?alt=media&token=21acf61c-3247-4b7d-9ea1-054756593765", uid: "")]
     
     //MARK: - Lifecycle
     
@@ -31,6 +35,8 @@ class ConversationViewController: UIViewController {
         //Configure the UI
         configureUI()
         
+ 
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -40,16 +46,41 @@ class ConversationViewController: UIViewController {
         navigationController?.navigationBar.isHidden = true
     }
     
+    init() {
+        super.init(nibName: nil, bundle: nil)
+        
+        //Create observers
+        createObservers()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+
+    
     //MARK: - Action
     
     @objc private func userLoggedIn(notification: NSNotification) {
-        //TODO: Load Matches and Conversations
-        print("DEBUG: User logged in for matches and conversations")
+        
+        Service.getMatchesForUser { matches in
+            self.matches = matches
+        }
     }
     
     
     
     //MARK: - Helpers
+    
+    private func createObservers() {
+        
+        //Log in observer
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(userLoggedIn(notification:)),
+                                               name: Notification.Name(USER_LOGGED_IN),
+                                               object: nil)
+        
+    }
     
     private func configureUI() {
         
@@ -76,7 +107,7 @@ class ConversationViewController: UIViewController {
 //MARK: - TableViewDelegate
 
 extension ConversationViewController: UITableViewDelegate {
-    
+   
 }
 
 //MARK: - TableViewDatasource
@@ -85,6 +116,10 @@ extension ConversationViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return cells.count
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: false)
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -107,12 +142,16 @@ extension ConversationViewController: UITableViewDataSource {
             return 1
         }
         else if cells[section] is ConversationSection {
-            return 1
+            return conversations.count
         }
         else {
             fatalError()
         }
         
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 50
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -134,11 +173,12 @@ extension ConversationViewController: UITableViewDataSource {
         if let cell = cells[indexPath.section] as? MatchSection {
             let cell = tableView.dequeueReusableCell(withIdentifier: cell.identifier, for: indexPath) as! CollectionTableViewCell
             cell.matches = matches
+            cell.delegate = self
             return cell
         }
         else if let cell = cells[indexPath.section] as? ConversationSection {
-            let cell = tableView.dequeueReusableCell(withIdentifier: cell.identifier, for: indexPath) as! CollectionTableViewCell
-            cell.matches = matches
+            let cell = tableView.dequeueReusableCell(withIdentifier: cell.identifier, for: indexPath) as! ConversationTableViewCell
+            cell.conversation = conversations[indexPath.row]
             return cell
         }
         else {
@@ -161,4 +201,14 @@ extension ConversationViewController: UITableViewDataSource {
         return headerView
     }
     
+}
+
+extension ConversationViewController: CollectionTableViewCellDelegate {
+    
+    func wantsToBeginConversation(for user: User) {
+        //Create chat view controller
+        let chatVC = ChatViewController(user: user)
+        //Push the view controller
+        navigationController?.pushViewController(chatVC, animated: true)
+    }
 }

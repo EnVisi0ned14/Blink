@@ -31,14 +31,11 @@ struct Conversation {
     
     public func getConversationNode() -> ConversationDictionary {
         
-        let conversationNode: [String: Any] = [
-            FULL_NAME: self.fullName,
-            LATEST_MESSAGE: self.latestMessage,
-            PROFILE_PICTURES: self.profileImageUrl,
-            UID: self.uid,
-        ]
-        
-        return conversationNode
-        
+        return [FULL_NAME: self.fullName,
+                LATEST_MESSAGE: self.latestMessage,
+                PROFILE_PICTURES: self.profileImageUrl,
+                UID: self.uid,
+               ]
     }
+    
 }

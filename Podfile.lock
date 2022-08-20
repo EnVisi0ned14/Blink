@@ -492,8 +492,13 @@ PODS:
   - gRPC-Core/Interface (1.28.2)
   - GTMSessionFetcher/Core (1.6.1)
   - GTProgressBar (0.3.3)
+  - InputBarAccessoryView (5.4.0):
+    - InputBarAccessoryView/Core (= 5.4.0)
+  - InputBarAccessoryView/Core (5.4.0)
   - JGProgressHUD (2.0.4)
   - leveldb-library (1.22.1)
+  - MessageKit (3.7.0):
+    - InputBarAccessoryView (~> 5.4.0)
   - nanopb (2.30908.0):
     - nanopb/decode (= 2.30908.0)
     - nanopb/encode (= 2.30908.0)
@@ -520,6 +525,7 @@ DEPENDENCIES:
   - Geofirestore (from `https://github.com/basementaspirations/GeoFirestore-iOS`, branch `firebase-upgrade`)
   - GTProgressBar
   - JGProgressHUD (~> 2.0.3)
+  - MessageKit
   - RangeSeekSlider
   - SDWebImage (~> 4.4.2)
   - SwiftLocation
@@ -545,8 +551,10 @@ SPEC REPOS:
     - gRPC-Core
     - GTMSessionFetcher
     - GTProgressBar
+    - InputBarAccessoryView
     - JGProgressHUD
     - leveldb-library
+    - MessageKit
     - nanopb
     - PromisesObjC
     - RangeSeekSlider
@@ -584,14 +592,16 @@ SPEC CHECKSUMS:
   gRPC-Core: 4afa11bfbedf7cdecd04de535a9e046893404ed5
   GTMSessionFetcher: 36689134877faeb055b27dfa4ccc9ceaa42e029e
   GTProgressBar: a480283ecb0ada50de16c71e634892826928f640
+  InputBarAccessoryView: 74d471ab1fa1736806be50328df79257e52865a9
   JGProgressHUD: 62658b14e72cccf179efc7a13bcb54d30b92fc22
   leveldb-library: 50c7b45cbd7bf543c81a468fe557a16ae3db8729
+  MessageKit: 8e76dd8d65ad44b49e1651c673497146416461e9
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
   RangeSeekSlider: 650b11fa1edcb92e1e0ede797669d98622570fb5
   SDWebImage: 783af2c3fa36291a250030c4752ee370a9a51d13
   SwiftLocation: 83e0ea75a1969cee3a1197e2b7095603fc23fde5
 
-PODFILE CHECKSUM: 2dc656a492a3f91258185b8de2a18d28dd96fe43
+PODFILE CHECKSUM: 4bf56415702c90e02194ab5db48fd86d8c192444
 
 COCOAPODS: 1.11.2

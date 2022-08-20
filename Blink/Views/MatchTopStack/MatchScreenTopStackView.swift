@@ -21,7 +21,7 @@ class MatchScreenTopStackView: UIStackView {
     
     private let blinkLabel: BlinkLabel = BlinkLabel(blinkLabelType: .topStack)
     private let settingsIcon: SettingsIcon = SettingsIcon(frame: .zero)
-    private let profileIcon: ProfileIcon = ProfileIcon(frame: .zero)
+    private let profileIcon: ProfileIcon = ProfileIcon(width: 50)
     
     public weak var delegate: MatchScreenTopStackViewDelegate?
     

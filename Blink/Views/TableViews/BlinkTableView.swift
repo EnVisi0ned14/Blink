@@ -18,7 +18,12 @@ class BlinkTableView: UITableView {
     //MARK: - Lifecycle
     
     init(for type: BlinkTableViewType) {
-        super.init(frame: .zero, style: .plain)
+        
+        //Grouped prevents sticky header sections
+        let style: UITableView.Style = type == .conversationTableView ? .grouped : .plain
+        
+        //Initalize with style
+        super.init(frame: .zero, style: style)
         
         //Configure the table view's fields
         configureFields(for: type)
@@ -69,9 +74,14 @@ class BlinkTableView: UITableView {
         //Background color to white
         backgroundColor = .white
         //Register cell
-        register(CollectionTableViewCell.self, forCellReuseIdentifier: CollectionTableViewCell.identifier)
+        register(CollectionTableViewCell.self,
+                 forCellReuseIdentifier: CollectionTableViewCell.identifier)
+        register(ConversationTableViewCell.self,
+                 forCellReuseIdentifier: ConversationTableViewCell.identifier)
         //Seperator style -> None
         separatorStyle = .none
+        //Create grouped style
+
     }
     
 }

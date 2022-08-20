@@ -9,7 +9,7 @@ import Foundation
 
 public typealias MatchDictionary = [String : Any]
 
-struct Match {
+public struct Match {
     
     let firstName: String
     let profileImageUrl: String

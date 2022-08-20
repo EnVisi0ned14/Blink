@@ -123,6 +123,31 @@ public class Service {
         }
     }
     
+    public static func getMatchesForUser(completion: @escaping ([Match]) -> Void) {
+        
+        //Create a list of matches
+        var matches = [Match]()
+        
+        //Grab uid
+        guard let uid = Auth.auth().currentUser?.uid else { completion(matches); return }
+        
+        //Search all matches
+        COLLECTION_MATCHES.document(uid).collection(MATCHES).getDocuments { matchCollection, error in
+            
+            //If error, return empty matches
+            guard error == nil else { completion(matches); return }
+
+            //For each match in the match collection
+            matches = matchCollection?.documents.map({ match in
+                return Match(with: match.data())
+            }) ?? []
+            
+            //Return matches
+            completion(matches)
+
+        }
+    }
+    
     
     
     public static func saveSwipe(forUser user: User, isLike: Bool, completion: ((Error?) -> Void)?) {
