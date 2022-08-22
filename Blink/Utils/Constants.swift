@@ -15,6 +15,7 @@ let COLLECTION_FEMALE_USERS = Firestore.firestore().collection("female_users")
 let COLLECTION_SWIPES = Firestore.firestore().collection("swipes")
 let COLLECTION_MATCHES = Firestore.firestore().collection(MATCHES)
 let MATCHES = "matches"
+let COLLECTION_CONVERSATIONS = Firestore.firestore().collection(CONVERSATIONS)
 
 let COLLECTION_LOCATION_MALE = GeoFirestore(collectionRef: COLLECTION_MALE_USERS)
 let COLLECTION_LOCATION_FEMALE = GeoFirestore(collectionRef: COLLECTION_FEMALE_USERS)
@@ -65,3 +66,15 @@ let USER_SETTINGS = "user_settings"
 
 //Conversation
 let LATEST_MESSAGE = "latest_message"
+let CONVERSATION_ID = "conversation_id"
+let SENDER_UID = "sender_uid"
+let MESSAGES = "messages"
+let SENDER_NAME = "sender_name"
+let TEXT_MESSAGE = "text_message"
+let DATE = "date"
+let TYPE = "type"
+let CONVERSATIONS = "conversations"
+let MESSAGE_ID = "message_id"
+
+//Match
+let BEGAN_CONVERSATION = "began_conversation"

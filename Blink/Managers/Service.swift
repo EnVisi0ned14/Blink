@@ -96,13 +96,15 @@ public class Service {
         
         let matchedUserData = Match(name: matchedUser.userProfile.firstName,
                                  profileImageUrl: otherImageUrl,
-                                 uid: matchedUser.uid)
+                                 uid: matchedUser.uid,
+                                 beganConversation: false)
         
         COLLECTION_MATCHES.document(currentUser.uid).collection(MATCHES).document(matchedUser.uid).setData(matchedUserData.getMatchNode())
         
         let currentUserData = Match(name: currentUser.userProfile.firstName,
                                  profileImageUrl: currentImageUrl,
-                                 uid: currentUser.uid)
+                                 uid: currentUser.uid,
+                                 beganConversation: false)
         
         COLLECTION_MATCHES.document(matchedUser.uid).collection(MATCHES).document(currentUser.uid).setData(currentUserData.getMatchNode())
     }
@@ -132,7 +134,11 @@ public class Service {
         guard let uid = Auth.auth().currentUser?.uid else { completion(matches); return }
         
         //Search all matches
-        COLLECTION_MATCHES.document(uid).collection(MATCHES).getDocuments { matchCollection, error in
+        COLLECTION_MATCHES
+            .document(uid)
+            .collection(MATCHES)
+            .whereField(BEGAN_CONVERSATION, isEqualTo: false)
+            .addSnapshotListener(includeMetadataChanges: true) { matchCollection, error in
             
             //If error, return empty matches
             guard error == nil else { completion(matches); return }
@@ -148,7 +154,99 @@ public class Service {
         }
     }
     
+    public static func getConversationsForUser(completion: @escaping ([Conversation]) -> Void) {
+        
+        //Fetch user
+        guard let user = RegistrationManager.shared.getCurrentUser() else { completion([]); return }
+        
+        user.genderCollection.document(user.uid).collection(CONVERSATIONS).document(CONVERSATIONS)
+            .addSnapshotListener(includeMetadataChanges: true) { snapshot, error in
+                
+                //Check for errors
+                guard error == nil,
+                      let conversationNode = snapshot?.data(),
+                      let conversations = conversationNode[CONVERSATIONS] as? [[String: Any]] else { completion([]); return }
+                
+                //Read all conversations
+                completion(conversations.map({Conversation(conversationDictionary: $0)}))
+        }
+        
+    }
     
+    public static func createConversation(sendTo reciever: User,
+                                          from sender: User,
+                                          message: Message,
+                                          completion: @escaping (String?) -> Void) {
+        
+        //Create the conversation id
+        let conversationId = UUID().uuidString
+        
+        //The conversation under the recievers data
+        let recieversConversation = reciever.createConversationNode(for: sender,
+                                                                    message: message,
+                                                                    id: conversationId)
+        
+        //The conversation under the sender's data
+        let senderConversation = sender.createConversationNode(for: reciever,
+                                                               message: message,
+                                                               id: conversationId)
+        
+        //Update reciever conversation
+        reciever.genderCollection
+            .document(reciever.uid).collection(CONVERSATIONS).document(CONVERSATIONS)
+            .setData(recieversConversation, merge: true)
+        
+        //Update the sender's conversation
+        sender.genderCollection
+            .document(sender.uid).collection(CONVERSATIONS).document(CONVERSATIONS)
+            .setData(senderConversation, merge: true)
+        
+        //Create conversation collection
+        COLLECTION_CONVERSATIONS.document(conversationId)
+            .setData([MESSAGES: [message.createMessageNode(from: conversationId)]], merge: true)
+        
+        
+        //Update match to began conversation for reciever
+        COLLECTION_MATCHES.document(reciever.uid).collection(MATCHES).document(sender.uid).updateData([BEGAN_CONVERSATION: true])
+        
+        //Update match to began conversation for sender
+        COLLECTION_MATCHES.document(sender.uid).collection(MATCHES).document(reciever.uid).updateData([BEGAN_CONVERSATION: true])
+        
+        //Return the conversation Id
+        completion(conversationId)
+        
+    }
+    
+    public static func loadConversation(from conversationId: String,
+                                        completion: @escaping ([Message]) -> Void) {
+        
+        var messages: [Message] = []
+
+        COLLECTION_CONVERSATIONS.document(conversationId).addSnapshotListener(includeMetadataChanges: true) { snapshot, error in
+            
+            //If there is an error
+            guard error == nil else { completion(messages); return }
+            
+            //Get the messages from document
+            guard let conversation = snapshot?.data(),
+                  let convoMessages = conversation[MESSAGES] as? [[String: Any]] else {completion(messages); return}
+            
+            //Convert into messages
+            messages = convoMessages.map({Message(with: $0)})
+            
+            //Return messages from conversation
+            completion(messages)
+
+        }
+    }
+    
+    public static func sendMessage(to conversationId: String, message: Message) {
+        
+        COLLECTION_CONVERSATIONS.document(conversationId).updateData([
+            MESSAGES: FieldValue.arrayUnion([message.createMessageNode(from: conversationId)] as [Any])
+        ])
+        
+    }
     
     public static func saveSwipe(forUser user: User, isLike: Bool, completion: ((Error?) -> Void)?) {
         

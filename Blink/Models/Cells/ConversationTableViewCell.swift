@@ -87,13 +87,16 @@ class ConversationTableViewCell: UITableViewCell {
     
     private func configureCell() {
         
-        guard let profileURL = URL(string: conversation.profileImageUrl) else { return }
+        print("DEBUG: Configuring for \(conversation.profileImageUrl)")
+        print("DEBUG: Conversation name: \(conversation.firstName)")
         
+        guard let profileURL = URL(string: conversation.profileImageUrl) else { return }
+
         //Set profile URL
         profileIcon.setProfilePicture(with: profileURL)
         
         //Set name label
-        nameLabel.text = conversation.fullName
+        nameLabel.text = conversation.firstName
         
         //Set latest message label
         latestMessageLabel.text = conversation.latestMessage

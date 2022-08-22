@@ -7,17 +7,34 @@
 
 import UIKit
 import MessageKit
+import InputBarAccessoryView
+
 
 public class ChatViewController: MessagesViewController {
     
     //MARK: - Fields
     
-    private let user: User
+    private let recieveUser: User
+    private let sender: User
+    
+    private var conversationId: String?
+    
+    private var messages: [MessageType] = [MessageType]() {
+        didSet { messagesCollectionView.reloadData() }
+    }
     
     //MARK: - Lifecycle
     
-    init(user: User) {
-        self.user = user
+    init?(recieveUser: User) {
+        
+        //Grab current user from registration manager
+        guard let currentUser = RegistrationManager.shared.getCurrentUser() else { return nil }
+        
+        //Assign global properties
+        self.recieveUser = recieveUser
+        self.sender = currentUser
+        
+        //Call super init
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -32,6 +49,7 @@ public class ChatViewController: MessagesViewController {
         messagesCollectionView.messagesDataSource = self
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
+        messageInputBar.delegate = self
         
         //Configure the UI
         configureUI()
@@ -46,15 +64,32 @@ public class ChatViewController: MessagesViewController {
         
     }
     
+    //MARK: - Actions
+    
+    
+    
+    
     //MARK: - Helpers
+    
+    private func observeConversation() {
+        
+        guard let conversationId = conversationId else { return }
+        
+        Service.loadConversation(from: conversationId) { messages in
+            self.messages = messages
+        }
+        
+    }
+    
+    private func createMessage(with text: String) -> Message {
+        return Message(sender: currentSender() as! Sender, kind: MessageKind.text(text), messageId: UUID().uuidString, sentDate: Date())
+    }
     
     private func configureUI() {
         
-        //Set the title for the view controller
-        title = user.userProfile.firstName
-        
-        
-        
+        //Set the title to recieving user
+        navigationItem.title = recieveUser.userProfile.firstName
+
     }
     
 }
@@ -64,15 +99,15 @@ public class ChatViewController: MessagesViewController {
 extension ChatViewController: MessagesDataSource {
     
     public func currentSender() -> SenderType {
-        <#code#>
+        return Sender(senderId: sender.uid, displayName: sender.userProfile.firstName)
     }
     
     public func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageType {
-        <#code#>
+        return messages[indexPath.section]
     }
     
     public func numberOfSections(in messagesCollectionView: MessagesCollectionView) -> Int {
-        <#code#>
+        return messages.count
     }
     
     
@@ -86,5 +121,44 @@ extension ChatViewController: MessagesLayoutDelegate {
 //MARK: - Messages Display Delegate
 
 extension ChatViewController: MessagesDisplayDelegate {
+    
+}
+
+
+//MARK: - InputBarAccessoryViewDelegate
+extension ChatViewController: InputBarAccessoryViewDelegate {
+    
+    public func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
+        
+        //Create message
+        let message = createMessage(with: text)
+        
+        //If this is the first message ever sent
+        if(messages.count == 0) {
+            
+            //Create conversation
+            Service.createConversation(sendTo: recieveUser, from: sender, message: message) { [weak self] conversationId in
+                
+                //Update the conversation Id
+                self?.conversationId = conversationId
+                
+                //Start observing the conversation
+                self?.observeConversation()
+                
+            }
+        }
+        else {
+            
+            guard let conversationId = conversationId else { return }
+            
+            Service.sendMessage(to: conversationId, message: message)
+        }
+        
+        
+        //Clear text in inputbar
+        inputBar.inputTextView.text = ""
+        
+
+    }
     
 }

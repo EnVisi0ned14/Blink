@@ -9,32 +9,40 @@ import Foundation
 
 public typealias ConversationDictionary = [String: Any]
 
-struct Conversation {
-    let fullName: String
+public struct Conversation {
+    
+    
+    let firstName: String
     let latestMessage: String
     let profileImageUrl: String
     let uid: String
+    let conversationId: String
     
     init(conversationDictionary: ConversationDictionary) {
-        self.fullName = conversationDictionary[FULL_NAME] as? String ?? ""
+        self.firstName = conversationDictionary[FIRST_NAME] as? String ?? ""
         self.latestMessage = conversationDictionary[LATEST_MESSAGE] as? String ?? ""
+        self.conversationId = conversationDictionary[CONVERSATION_ID] as? String ?? ""
         self.profileImageUrl = conversationDictionary[PROFILE_PICTURES] as? String ?? ""
         self.uid = conversationDictionary[UID] as? String ?? ""
     }
     
-    init(fullName: String, latestMessage: String, profileImageUrl: String, uid: String) {
-        self.fullName = fullName
+    init(firstName: String, latestMessage: String, profileImageUrl: String, uid: String, conversationId: String) {
+        
+        self.firstName = firstName
+        self.conversationId = conversationId
         self.latestMessage = latestMessage
         self.profileImageUrl = profileImageUrl
         self.uid = uid
+        
     }
     
     public func getConversationNode() -> ConversationDictionary {
         
-        return [FULL_NAME: self.fullName,
+        return [FIRST_NAME: self.firstName,
                 LATEST_MESSAGE: self.latestMessage,
                 PROFILE_PICTURES: self.profileImageUrl,
                 UID: self.uid,
+                CONVERSATION_ID: self.conversationId
                ]
     }
     

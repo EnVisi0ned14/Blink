@@ -94,6 +94,22 @@ public class User {
 
         
     }
+
+    public func createConversationNode(for user: User,
+                                       message: Message,
+                                       id: String) -> [String: Any] {
+        
+        let conversationNode: [String: Any] = [
+            
+            CONVERSATIONS: [[LATEST_MESSAGE: message.textMessage,
+                            CONVERSATION_ID: id,
+                            FIRST_NAME: user.userProfile.firstName,
+                            UID: user.uid,
+                            PROFILE_PICTURES: user.userProfile.profilePictures[0]]]
+        ]
+        
+        return conversationNode
+    }
     
     private func createUserNode(_ userProfile: [String: Any], _ userSettings: [String: Any]) -> [String: Any] {
         
@@ -226,7 +242,7 @@ public class User {
         
         public func setProfilePictures(profilePictures: [String]) -> UserBuilder {
             
-            for (index, profilePicture) in self.profilePictures.enumerated() {
+            for (index, profilePicture) in profilePictures.enumerated() {
                 self.profilePictures[index] = profilePicture
             }
             

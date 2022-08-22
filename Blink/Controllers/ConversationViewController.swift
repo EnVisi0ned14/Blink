@@ -21,7 +21,9 @@ class ConversationViewController: UIViewController {
         didSet { converstationTableView.reloadData() }
     }
     
-    private var conversations: [Conversation] = [Conversation(fullName: "Michael Abrams", latestMessage: "Want to grab some food?", profileImageUrl: "https://firebasestorage.googleapis.com:443/v0/b/blink-12ea7.appspot.com/o/images%2FEA325BA8-51F3-4F8A-9733-E531FF505FE0?alt=media&token=21acf61c-3247-4b7d-9ea1-054756593765", uid: ""), Conversation(fullName: "Michael Abrams", latestMessage: "Want to grab some food?", profileImageUrl: "https://firebasestorage.googleapis.com:443/v0/b/blink-12ea7.appspot.com/o/images%2FEA325BA8-51F3-4F8A-9733-E531FF505FE0?alt=media&token=21acf61c-3247-4b7d-9ea1-054756593765", uid: ""), Conversation(fullName: "Michael Abrams", latestMessage: "Want to grab some food?", profileImageUrl: "https://firebasestorage.googleapis.com:443/v0/b/blink-12ea7.appspot.com/o/images%2FEA325BA8-51F3-4F8A-9733-E531FF505FE0?alt=media&token=21acf61c-3247-4b7d-9ea1-054756593765", uid: ""), Conversation(fullName: "Michael Abrams", latestMessage: "Want to grab some food?", profileImageUrl: "https://firebasestorage.googleapis.com:443/v0/b/blink-12ea7.appspot.com/o/images%2FEA325BA8-51F3-4F8A-9733-E531FF505FE0?alt=media&token=21acf61c-3247-4b7d-9ea1-054756593765", uid: ""), Conversation(fullName: "Michael Abrams", latestMessage: "Want to grab some food?", profileImageUrl: "https://firebasestorage.googleapis.com:443/v0/b/blink-12ea7.appspot.com/o/images%2FEA325BA8-51F3-4F8A-9733-E531FF505FE0?alt=media&token=21acf61c-3247-4b7d-9ea1-054756593765", uid: "")]
+    private var conversations: [Conversation] = [Conversation]() {
+        didSet { converstationTableView.reloadData() }
+    }
     
     //MARK: - Lifecycle
     
@@ -65,6 +67,10 @@ class ConversationViewController: UIViewController {
         
         Service.getMatchesForUser { matches in
             self.matches = matches
+        }
+        
+        Service.getConversationsForUser { conversations in
+            self.conversations = conversations
         }
     }
     
@@ -207,7 +213,7 @@ extension ConversationViewController: CollectionTableViewCellDelegate {
     
     func wantsToBeginConversation(for user: User) {
         //Create chat view controller
-        let chatVC = ChatViewController(user: user)
+        guard let chatVC = ChatViewController(recieveUser: user) else { return }
         //Push the view controller
         navigationController?.pushViewController(chatVC, animated: true)
     }

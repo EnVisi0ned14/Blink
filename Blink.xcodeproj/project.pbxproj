@@ -56,6 +56,7 @@
 		488568A428AE9DEE0049D6C6 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488568A328AE9DEE0049D6C6 /* Conversation.swift */; };
 		488568A628AE9FE30049D6C6 /* ConversationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488568A528AE9FE30049D6C6 /* ConversationTableViewCell.swift */; };
 		488568A828B151940049D6C6 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488568A728B151940049D6C6 /* ChatViewController.swift */; };
+		488568AA28B15A880049D6C6 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488568A928B15A880049D6C6 /* Message.swift */; };
 		48EE63D9288DD477004682FA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48EE63D8288DD477004682FA /* AppDelegate.swift */; };
 		48EE63DB288DD477004682FA /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48EE63DA288DD477004682FA /* SceneDelegate.swift */; };
 		48EE63E2288DD478004682FA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 48EE63E1288DD478004682FA /* Assets.xcassets */; };
@@ -145,6 +146,7 @@
 		488568A328AE9DEE0049D6C6 /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
 		488568A528AE9FE30049D6C6 /* ConversationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationTableViewCell.swift; sourceTree = "<group>"; };
 		488568A728B151940049D6C6 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
+		488568A928B15A880049D6C6 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		48EE63D5288DD477004682FA /* Blink.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Blink.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		48EE63D8288DD477004682FA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		48EE63DA288DD477004682FA /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -416,6 +418,7 @@
 				48EE6412288E2F1D004682FA /* Cells */,
 				4885688228A85EB70049D6C6 /* Match.swift */,
 				488568A328AE9DEE0049D6C6 /* Conversation.swift */,
+				488568A928B15A880049D6C6 /* Message.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -688,6 +691,7 @@
 				4874734E28A5D9ED009852C1 /* StatsCollectionView.swift in Sources */,
 				48EE63DB288DD477004682FA /* SceneDelegate.swift in Sources */,
 				48EE6411288E2EAA004682FA /* ProfileViewModel.swift in Sources */,
+				488568AA28B15A880049D6C6 /* Message.swift in Sources */,
 				48EE6431289B0B6A004682FA /* NoAccountLabel.swift in Sources */,
 				48786C0428A18713005F5146 /* Constants.swift in Sources */,
 				48786BE3289C800D005F5146 /* RegistrationBirthdayViewController.swift in Sources */,

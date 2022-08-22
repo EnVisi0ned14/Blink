@@ -411,6 +411,8 @@ PODS:
     - "gRPC-C++ (~> 1.28.0)"
     - leveldb-library (~> 1.22)
     - nanopb (~> 2.30908.0)
+  - FirebaseFirestoreSwift (8.12.1-beta):
+    - FirebaseFirestore (~> 8.0)
   - FirebaseInstallations (8.7.0):
     - FirebaseCore (~> 8.0)
     - GoogleUtilities/Environment (~> 7.4)
@@ -521,6 +523,7 @@ DEPENDENCIES:
   - Firebase/Core
   - Firebase/Firestore
   - Firebase/Storage
+  - FirebaseFirestoreSwift (> 7.0-beta)
   - GeoFire/Utils
   - Geofirestore (from `https://github.com/basementaspirations/GeoFirestore-iOS`, branch `firebase-upgrade`)
   - GTProgressBar
@@ -541,6 +544,7 @@ SPEC REPOS:
     - FirebaseCoreDiagnostics
     - FirebaseDatabase
     - FirebaseFirestore
+    - FirebaseFirestoreSwift
     - FirebaseInstallations
     - FirebaseStorage
     - GeoFire
@@ -581,6 +585,7 @@ SPEC CHECKSUMS:
   FirebaseCoreDiagnostics: 3721920bde3a9a6d5aa093c1d25e9d3e47f694af
   FirebaseDatabase: 917fbeed577a68eb1ba0eb48c52a3aa10ac13f92
   FirebaseFirestore: 7b8bd72aff4d3ad91498343e81fdbaa994ce8abe
+  FirebaseFirestoreSwift: 411c224545336b62180e4d18e750127f51b42fe2
   FirebaseInstallations: ede6fb72bb6337914e5888b399271259d0c4910c
   FirebaseStorage: 2765944230981e63f8bd2938d9d5819158b7c34c
   GeoFire: c34927b5c81ab614f611c79aa8d074cfa9780f07
@@ -602,6 +607,6 @@ SPEC CHECKSUMS:
   SDWebImage: 783af2c3fa36291a250030c4752ee370a9a51d13
   SwiftLocation: 83e0ea75a1969cee3a1197e2b7095603fc23fde5
 
-PODFILE CHECKSUM: 4bf56415702c90e02194ab5db48fd86d8c192444
+PODFILE CHECKSUM: c7cd1064c1eca3eab0e7bad7708fb10de8b2044f
 
 COCOAPODS: 1.11.2

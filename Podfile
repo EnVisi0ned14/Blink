@@ -19,6 +19,7 @@ pod 'GeoFire/Utils'
 pod 'SwiftLocation'
 pod 'Geofirestore', :git => 'https://github.com/basementaspirations/GeoFirestore-iOS', :branch => 'firebase-upgrade'
 pod 'MessageKit'
+pod 'FirebaseFirestoreSwift', '> 7.0-beta'
 
 
 end

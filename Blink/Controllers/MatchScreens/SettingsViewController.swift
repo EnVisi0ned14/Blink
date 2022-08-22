@@ -126,11 +126,12 @@ class SettingsViewController: UIViewController {
             //Try to sign out
             try Auth.auth().signOut()
             
+            //Pop view controller
+            navigationController?.popViewController(animated: true)
+            
             //Log user out
             RegistrationManager.shared.logUserOut()
             
-            //Pop view controller
-            navigationController?.popViewController(animated: true)
             
         }
         catch (let error) {

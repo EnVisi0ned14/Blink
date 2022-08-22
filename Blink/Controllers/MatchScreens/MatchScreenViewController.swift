@@ -86,10 +86,10 @@ class MatchScreenViewController: UIViewController {
         print("DEBUG: Fetching and loading cards")
         
         //Update profile picture
-        //matchScreenTopStackView.setProfilePicture(with: profileUrl)
+        matchScreenTopStackView.setProfilePicture(with: profileUrl)
         
         //Fetch and load cards
-        //fetchAndLoadCards(for: user)
+        fetchAndLoadCards(for: user)
         
     }
     
