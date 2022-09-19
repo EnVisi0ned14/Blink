@@ -75,7 +75,7 @@ public class RegistrationManager {
                     .setEmail(email: credentials.email)
                     .setGender(gender: credentials.gender)
                     .setPreference(preference: credentials.preference)
-                    .setBirthday(birthday: credentials.birthday)
+                    .setBirthday(birthdayString: credentials.birthday)
                     .setFirstName(firstName: credentials.firstName)
                     .setLastName(lastName: credentials.lastName)
                     .setProfilePictures(profilePictures: [imageUrl])
@@ -98,17 +98,17 @@ public class RegistrationManager {
         let collection = user.userSettings.gender == .male ? COLLECTION_MALE_USERS : COLLECTION_FEMALE_USERS
         
         //Set the data
-        collection.document(user.uid).setData(user.getUserNode()) { [weak self] error in
+        do {
+            try collection.document(user.uid).setData(from: user, merge: true)
             
-            guard error == nil else {
-                self?.returnError(error: .failedToUploadToFirestore, completion: completion)
-                return
-            }
-        
-            
-            self?.updateUserLocation(for: user, completion: completion)
+            updateUserLocation(for: user, completion: completion)
             
         }
+        catch (let error) {
+            print("Error setting the user data: \(error.localizedDescription)")
+            returnError(error: .failedToUploadToFirestore, completion: completion)
+        }
+        
     }
     
     public func updateUserLocation(for user: User, completion: @escaping RegistrationCallback) {

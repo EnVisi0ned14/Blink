@@ -57,6 +57,16 @@ let LATITUDE = "latitude"
 let LONGITUDE = "longitude"
 let GEO_HASH = "geoHash"
 
+//User stats
+let USER_STATS = "user_stats"
+let GHOSTED = "ghosted"
+let NUMBER_OF_SWIPES = "number_of_swipes"
+let NUMBER_OF_TIMES_SWIPED_ON = "number_of_times_swiped_on"
+let SWIPED_RIGHT_ON = "swiped_right_on"
+let SWIPED_LEFT_ON = "swiped_left_on"
+let SWIPED_RIGHT = "swiped_right"
+let SWIPED_LEFT = "swiped_left"
+
 //User
 let EMAIL = "email"
 let UID = "uid"

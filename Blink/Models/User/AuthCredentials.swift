@@ -14,7 +14,7 @@ public struct AuthCredentials {
     var firstName: String = ""
     var lastName: String = ""
     var password: String = ""
-    var birthday: Date = Date()
+    var birthday: String = DateManager.getDateString(from: Date())
     var gender: Gender = .male
     var preference: Gender = .male
     var profilePicutre: UIImage = UIImage(systemName: "plus")!

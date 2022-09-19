@@ -9,7 +9,7 @@ import Foundation
 
 public typealias MatchDictionary = [String : Any]
 
-public struct Match {
+public struct Match: Codable {
     
     let firstName: String
     let profileImageUrl: String
@@ -31,6 +31,13 @@ public struct Match {
     }
     
     public func getMatchNode() -> MatchDictionary {
-        return [FIRST_NAME: firstName, PROFILE_PICTURES: profileImageUrl, UID: uid]
+        return [FIRST_NAME: firstName, PROFILE_PICTURES: profileImageUrl, UID: uid, BEGAN_CONVERSATION: beganConversation]
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case firstName = "first_name"
+        case profileImageUrl = "profile_pictures"
+        case uid = "uid"
+        case beganConversation = "began_conversation"
     }
 }

@@ -74,7 +74,7 @@ class RegistrationBirthDayViewController: UIViewController {
             if(Validator.birthdayIsValid(for: birthDay)) {
                 
                 //Update user
-                user.birthday = birthDay
+                user.birthday = DateManager.getDateString(from: birthDay)
                 
                 //Present next VC
                 let genderVC = RegistrationGenderViewController(user: user)

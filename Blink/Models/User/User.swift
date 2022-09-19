@@ -10,18 +10,21 @@ import FirebaseFirestore
 import Geofirestore
 import CoreLocation
 
-public enum Gender: String {
+public enum Gender: String, Codable {
+    
     case male = "male"
     case female = "female"
+    
 }
 
-public class User {
+public class User: Codable {
     
     //MARK: - Fields
 
     var email: String
     var userSettings: UserSettings
     var userProfile: UserProfile
+    var userStats: UserStats
     var uid: String
     
     var preferenceCollection: CollectionReference {
@@ -54,46 +57,31 @@ public class User {
         return CLLocation(latitude: userSettings.latitude, longitude: userSettings.longitude)
     }
     
+    
     //MARK: - Constructor
     
-    init?(with userNode: [String: Any]) {
+    init(email: String, uid: String, userSettings: UserSettings,
+         userProfile: UserProfile, userStats: UserStats) {
         
-        guard let userProfile = UserProfile(userNode: userNode),
-              let userSettings = UserSettings(userNode: userNode),
-              let email = userNode[EMAIL] as? String,
-              let uid = userNode[UID] as? String else { return nil }
-        
-        self.userProfile = userProfile
-        self.userSettings = userSettings
         self.email = email
         self.uid = uid
+        self.userSettings = userSettings
+        self.userProfile = userProfile
+        self.userStats = userStats
 
     }
     
-
-    init(email: String, uid: String, userSettings: UserSettings, userProfile: UserProfile) {
-        
-        self.email = email
-        self.uid = uid
-        self.userSettings = userSettings
-        self.userProfile = userProfile
-
-    }
 
     //MARK: - Helpers
     
-    //Transforms the user into a map ready for firestore
-    public func getUserNode() -> [String: Any] {
-        
-        let userProfile = createProfileNode()
-        
-        let userSettings = createSettingsNode()
-        
-        return createUserNode(userProfile, userSettings)
-        
-
-        
+    enum CodingKeys: String, CodingKey {
+        case email = "email"
+        case uid = "uid"
+        case userProfile = "user_profile"
+        case userSettings = "user_settings"
+        case userStats = "user_stats"
     }
+    
 
     public func createConversationNode(for user: User,
                                        message: Message,
@@ -101,63 +89,14 @@ public class User {
         
         let conversationNode: [String: Any] = [
             
-            CONVERSATIONS: [[LATEST_MESSAGE: message.textMessage,
-                            CONVERSATION_ID: id,
-                            FIRST_NAME: user.userProfile.firstName,
-                            UID: user.uid,
-                            PROFILE_PICTURES: user.userProfile.profilePictures[0]]]
+            LATEST_MESSAGE: message.textMessage,
+            CONVERSATION_ID: id,
+            FIRST_NAME: user.userProfile.firstName,
+            UID: user.uid,
+            PROFILE_PICTURES: user.userProfile.profilePictures[0]
         ]
-        
+
         return conversationNode
-    }
-    
-    private func createUserNode(_ userProfile: [String: Any], _ userSettings: [String: Any]) -> [String: Any] {
-        
-        let userNode: [String: Any] = [
-            EMAIL: email,
-            UID: uid,
-            USER_SETTINGS: userSettings,
-            USER_PROFILE: userProfile
-        ]
-        
-        return userNode
-        
-    }
-    
-    private func createProfileNode() -> [String: Any] {
-        
-        let userProfile: [String: Any] = [
-        
-            BIRTHDAY: DateManager.getDateString(from: userProfile.birthday),
-            OCUPATION: userProfile.occupation,
-            SCHOOL: userProfile.school,
-            BIO: userProfile.bio,
-            FIRST_NAME: userProfile.firstName,
-            LAST_NAME: userProfile.lastName,
-            PROFILE_PICTURES: userProfile.profilePictures
-
-        ]
-        
-        return userProfile
-    }
-    
-    private func createSettingsNode() -> [String: Any] {
-        
-        let settingsNode: [String: Any] = [
-        
-            MAX_SEEKING_AGE_KEY: userSettings.maxSeekingAge,
-            MIN_SEEKING_AGE: userSettings.minSeekingAge,
-            DISTANCE_RANGE: userSettings.distanceRange,
-            GENDER: userSettings.gender.rawValue,
-            PREFERENCE: userSettings.preference.rawValue,
-            GEO_HASH: userSettings.geoHash,
-            LATITUDE: userSettings.latitude,
-            LONGITUDE: userSettings.longitude
-
-        ]
-        
-        return settingsNode
-        
     }
     
     public class UserBuilder {
@@ -177,7 +116,7 @@ public class User {
         private var longitude: Double = 0
         
         //User profile
-        private var birthday: Date = Date()
+        private var birthdayString: String = DateManager.getDateString(from: Date())
         private var profilePictures: [String] = ["", "", "", "", "", ""]
         private var firstName: String = ""
         private var lastName: String = ""
@@ -235,8 +174,8 @@ public class User {
             return self
         }
 
-        public func setBirthday(birthday: Date) -> UserBuilder {
-            self.birthday = birthday
+        public func setBirthday(birthdayString: String) -> UserBuilder {
+            self.birthdayString = birthdayString
             return self
         }
         
@@ -273,10 +212,11 @@ public class User {
             self.bio = bio
             return self
         }
+
         
         public func build() -> User {
             
-            let userProfile = UserProfile(birthday: birthday, profilePictures: profilePictures,
+            let userProfile = UserProfile(birthdayString: birthdayString, profilePictures: profilePictures,
                                           firstName: firstName, lastName: lastName,
                                           occupation: occupation, school: school, bio: bio)
             
@@ -285,7 +225,8 @@ public class User {
                                             preference: preference, geoHash: geoHash,
                                             latitude: latitude, longitude: longitude)
             
-            return User(email: email, uid: uid, userSettings: userSettings, userProfile: userProfile)
+            
+            return User(email: email, uid: uid, userSettings: userSettings, userProfile: userProfile, userStats: UserStats.newUser)
             
         }
         

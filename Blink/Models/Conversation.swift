@@ -9,7 +9,11 @@ import Foundation
 
 public typealias ConversationDictionary = [String: Any]
 
-public struct Conversation {
+public struct Conversations: Codable {
+    let conversations: [Conversation]
+}
+
+public struct Conversation: Codable {
     
     
     let firstName: String
@@ -17,6 +21,7 @@ public struct Conversation {
     let profileImageUrl: String
     let uid: String
     let conversationId: String
+    
     
     init(conversationDictionary: ConversationDictionary) {
         self.firstName = conversationDictionary[FIRST_NAME] as? String ?? ""
@@ -44,6 +49,16 @@ public struct Conversation {
                 UID: self.uid,
                 CONVERSATION_ID: self.conversationId
                ]
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        
+        case firstName = "first_name"
+        case latestMessage = "latest_message"
+        case profileImageUrl = "profile_pictures"
+        case uid = "uid"
+        case conversationId = "conversation_id"
+        
     }
     
 }

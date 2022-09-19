@@ -30,9 +30,14 @@ class StatsCollectionView: UICollectionView {
         isPagingEnabled = true
         //Shows Scroll indicator
         showsHorizontalScrollIndicator = false
+        
         //Register cell
         register(StatsCollectionViewCell.self,
                  forCellWithReuseIdentifier: StatsCollectionViewCell.identifier)
+        
+        //Turn off consetInset
+        contentInsetAdjustmentBehavior = .never
+        contentInset = .zero
         
         
     }

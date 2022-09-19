@@ -8,6 +8,10 @@
 import UIKit
 import SDWebImage
 
+protocol MatchScreenViewDelegate: AnyObject {
+    func matchScreenViewIsDismissing()
+}
+
 class MatchScreenView: UIView {
 
     //MARK: - Fields
@@ -23,6 +27,8 @@ class MatchScreenView: UIView {
     private let keepSwipingButton = BlinkBorderButton(title: "Keep Swiping")
     
     private let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+    
+    public weak var delegate: MatchScreenViewDelegate?
     
     private lazy var views = [
         currentUserProfileImage,
@@ -74,8 +80,11 @@ class MatchScreenView: UIView {
         
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut) {
             self.alpha = 0
-        } completion: { _ in
-            self.removeFromSuperview()
+        } completion: { [weak self] _ in
+            
+            self?.delegate?.matchScreenViewIsDismissing()
+            
+            self?.removeFromSuperview()
         }
 
     }

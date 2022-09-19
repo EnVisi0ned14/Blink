@@ -7,6 +7,11 @@
 
 import UIKit
 
+enum ChatVCType {
+    case existingConversation
+    case newConversation
+}
+
 class ConversationViewController: UIViewController {
     
     //MARK: - Fields
@@ -44,6 +49,9 @@ class ConversationViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        //Unhide tab bar
+        tabBarController?.tabBar.isHidden = false
+        
         //Hide navigation bar
         navigationController?.navigationBar.isHidden = true
     }
@@ -70,13 +78,39 @@ class ConversationViewController: UIViewController {
         }
         
         Service.getConversationsForUser { conversations in
-            self.conversations = conversations
+            self.conversations = conversations?.conversations ?? []
         }
     }
     
     
     
     //MARK: - Helpers
+    
+    private func presentChatVC(for type: ChatVCType, with conversation: Conversation) {
+        
+        //Grab the sender
+        guard let sender = RegistrationManager.shared.getCurrentUser() else { return }
+        
+        
+        //Fetch the reciever
+        Service.fetchUser(withUid: conversation.uid) { [weak self] reciever in
+            
+            var chatVC: AbstractChatViewController
+            
+            switch type {
+            case .existingConversation:
+                //Create chatVC
+                chatVC = ExistingConversationViewController(conversationId: conversation.conversationId, sender: sender, reciever: reciever)
+            case .newConversation:
+                chatVC = ChatViewController(sender: sender, reciever: reciever)
+            }
+            
+            
+            //Push chat VC
+            self?.navigationController?.pushViewController(chatVC, animated: true)
+
+        }
+    }
     
     private func createObservers() {
         
@@ -125,7 +159,17 @@ extension ConversationViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        //Deselect the row
         tableView.deselectRow(at: indexPath, animated: false)
+        
+        //Guard incorrect section
+        guard indexPath.section == 1 else { return }
+        
+        //Present the existing chat view controller
+        presentChatVC(for: .existingConversation, with: conversations[indexPath.row])
+        
+        
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -212,9 +256,13 @@ extension ConversationViewController: UITableViewDataSource {
 extension ConversationViewController: CollectionTableViewCellDelegate {
     
     func wantsToBeginConversation(for user: User) {
+        
+        //Get the sender
+        guard let sender = RegistrationManager.shared.getCurrentUser() else { return }
         //Create chat view controller
-        guard let chatVC = ChatViewController(recieveUser: user) else { return }
+        let chatVC = ChatViewController(sender: sender, reciever: user)
         //Push the view controller
         navigationController?.pushViewController(chatVC, animated: true)
+        
     }
 }

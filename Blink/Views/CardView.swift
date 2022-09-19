@@ -28,12 +28,15 @@ class CardView: UIView {
     //Is the image the card view displays
     private let cardImageView = UIImageView()
     
+    /** delegate is the card view delegate */
     public weak var delegate: CardViewDelegate?
     
     //Is the view used to displaye the person's name, age, distance, and stats button
     private let personDescriptor = PersonDescriptor()
     
     public var cardViewModel: CardViewModel!
+    
+    private lazy var barStackView = SegmentedBarView(numberOfSegments: cardViewModel.pictureCount)
     
     //MARK: - Lifecycle
     
@@ -55,6 +58,7 @@ class CardView: UIView {
         
         //Configure the UI for the card view
         configureUI()
+        
         
     }
     
@@ -91,11 +95,23 @@ class CardView: UIView {
             cardViewModel.showPreviousPhoto()
         }
         
+        //Update the card's image with the image url
         cardImageView.sd_setImage(with: cardViewModel.imageUrl)
+        
+        //Set the barStackView's current position
+        barStackView.setHighlighted(index: cardViewModel.index)
         
     }
     
     //MARK: - Helpers
+    
+    private func configureBarStackView() {
+        
+        addSubview(barStackView)
+        barStackView.anchor(top: topAnchor, left: leadingAnchor, right: trailingAnchor, paddingTop: 8, paddingLeft: 8, paddingRight: 8, height: 4)
+
+        
+    }
     
     func panCard(sender: UIPanGestureRecognizer) {
         let translation = sender.translation(in: nil)
@@ -134,11 +150,13 @@ class CardView: UIView {
     }
     
     func configureGestureRecognizers() {
+        
         let pan = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture))
         addGestureRecognizer(pan)
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(handleChangePhoto))
         addGestureRecognizer(tap)
+        
     }
     
     //Configures the card view's fields
@@ -167,6 +185,9 @@ class CardView: UIView {
         
         //Set the constraints for the person descriptor
         personDescriptor.anchor(leading: leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor, padding: UIEdgeInsets(top: .zero, left: 10, bottom: 5, right: 10), size: CGSize(width: .zero, height: 75))
+        
+        //Configure the barStackView
+        configureBarStackView()
         
     }
     

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 protocol LogoutTableViewFooterDelegate: AnyObject {
     func wantsToLogout()

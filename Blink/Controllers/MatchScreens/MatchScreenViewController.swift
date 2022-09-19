@@ -43,7 +43,6 @@ class MatchScreenViewController: UIViewController {
         //Configure the UI
         configureUI()
         
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -197,6 +196,8 @@ class MatchScreenViewController: UIViewController {
         tabBarController?.tabBar.isHidden = true
         //Create match view
         let matchView = MatchScreenView(viewModel: matchViewModel)
+        //Assign delegate
+        matchView.delegate = self
         //Add as subview
         view.addSubview(matchView)
         //Fill superview
@@ -300,6 +301,14 @@ extension MatchScreenViewController: CardViewDelegate {
         self.topCardView = cardViews.last
     }
     
+    
+}
+
+extension MatchScreenViewController: MatchScreenViewDelegate {
+    
+    func matchScreenViewIsDismissing() {
+        tabBarController?.tabBar.isHidden = false
+    }
     
 }
 

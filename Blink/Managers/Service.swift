@@ -37,7 +37,16 @@ public class Service {
     }
     
     public static func saveUserData(for user: User, completion: @escaping (Error?) -> Void) {
-        user.genderCollection.document(user.uid).updateData(user.getUserNode(), completion: completion)
+        
+        do {
+            try user.genderCollection.document(user.uid)
+                .setData(from: user, merge: true, completion: completion)
+        }
+        catch (let error) {
+            completion(error)
+        }
+        
+
     }
     
     public static func fetchUsers(for user: User, completion: @escaping ([User]) -> Void) {
@@ -61,23 +70,34 @@ public class Service {
                     
                     print("DEBUG: Found location for key \(safeKey)")
                     
-                    guard let userNode = snapshot?.data(),
-                          let searchedUser = User(with: userNode),
-                          let age = searchedUser.userProfile.age else { group.leave(); return }
-                    
-                    print("DEBUG: Made user")
-                    
-                    if(age > user.userSettings.maxSeekingAge) { group.leave(); return }
-                    if(age < user.userSettings.minSeekingAge) { group.leave(); return }
-                    if(searchedUser.uid == user.uid) { group.leave(); return }
-                    if(swipes[searchedUser.uid] != nil) { group.leave(); return }
-                    
-                    print("DEBUG: Appending user \(searchedUser.userProfile.firstName)")
-                    
-                    //Append the user
-                    users.append(searchedUser)
-                    
-                    group.leave()
+                    //If data does not exist
+                    do {
+                        guard let searchedUser = try snapshot?.data(as: User.self)
+                                                 else { group.leave(); return }
+                        
+                        //Grab the user age
+                        let age = searchedUser.userProfile.age
+                        
+                        print("DEBUG: Made user")
+                        
+                        if(age > user.userSettings.maxSeekingAge) { group.leave(); return }
+                        if(age < user.userSettings.minSeekingAge) { group.leave(); return }
+                        if(searchedUser.uid == user.uid) { group.leave(); return }
+                        if(swipes[searchedUser.uid] != nil) { group.leave(); return }
+                        
+                        print("DEBUG: Appending user \(searchedUser.userProfile.firstName)")
+                        
+                        //Append the user
+                        users.append(searchedUser)
+                        
+                        group.leave()
+                        
+                        
+                    }
+                    catch(let error) {
+                        print("DEBUG: Failed to decode user: \(error.localizedDescription)")
+                        group.leave(); return
+                    }
                 }
             }
             
@@ -91,6 +111,7 @@ public class Service {
     }
     
     public static func uploadMatch(currentUser: User, matchedUser: User) {
+        
         guard let otherImageUrl = matchedUser.userProfile.profilePictures.first else { return }
         guard let currentImageUrl = currentUser.userProfile.profilePictures.first else { return }
         
@@ -99,14 +120,20 @@ public class Service {
                                  uid: matchedUser.uid,
                                  beganConversation: false)
         
-        COLLECTION_MATCHES.document(currentUser.uid).collection(MATCHES).document(matchedUser.uid).setData(matchedUserData.getMatchNode())
-        
         let currentUserData = Match(name: currentUser.userProfile.firstName,
                                  profileImageUrl: currentImageUrl,
                                  uid: currentUser.uid,
                                  beganConversation: false)
         
-        COLLECTION_MATCHES.document(matchedUser.uid).collection(MATCHES).document(currentUser.uid).setData(currentUserData.getMatchNode())
+        do {
+            try  COLLECTION_MATCHES.document(currentUser.uid).collection(MATCHES).document(matchedUser.uid).setData(from: matchedUserData)
+            
+            try         COLLECTION_MATCHES.document(matchedUser.uid).collection(MATCHES).document(currentUser.uid).setData(from: currentUserData)
+        }
+        catch (let error) {
+            print("DEBUG: Error uploading matches \(error.localizedDescription)")
+        }
+
     }
     
     public static func checkIfMatchExists(forUser user: User, completion: @escaping(Bool) -> Void) {
@@ -154,21 +181,20 @@ public class Service {
         }
     }
     
-    public static func getConversationsForUser(completion: @escaping ([Conversation]) -> Void) {
+    public static func getConversationsForUser(completion: @escaping (Conversations?) -> Void) {
         
         //Fetch user
-        guard let user = RegistrationManager.shared.getCurrentUser() else { completion([]); return }
+        guard let user = RegistrationManager.shared.getCurrentUser() else { completion(nil); return }
         
         user.genderCollection.document(user.uid).collection(CONVERSATIONS).document(CONVERSATIONS)
             .addSnapshotListener(includeMetadataChanges: true) { snapshot, error in
                 
                 //Check for errors
-                guard error == nil,
-                      let conversationNode = snapshot?.data(),
-                      let conversations = conversationNode[CONVERSATIONS] as? [[String: Any]] else { completion([]); return }
+                guard error == nil else { completion(nil); return }
                 
-                //Read all conversations
-                completion(conversations.map({Conversation(conversationDictionary: $0)}))
+                //Decode conversations
+                try? completion(snapshot?.data(as: Conversations.self) ?? nil)
+ 
         }
         
     }
@@ -176,10 +202,8 @@ public class Service {
     public static func createConversation(sendTo reciever: User,
                                           from sender: User,
                                           message: Message,
-                                          completion: @escaping (String?) -> Void) {
-        
-        //Create the conversation id
-        let conversationId = UUID().uuidString
+                                          id conversationId: String,
+                                          completion: @escaping () -> Void) {
         
         //The conversation under the recievers data
         let recieversConversation = reciever.createConversationNode(for: sender,
@@ -194,12 +218,12 @@ public class Service {
         //Update reciever conversation
         reciever.genderCollection
             .document(reciever.uid).collection(CONVERSATIONS).document(CONVERSATIONS)
-            .setData(recieversConversation, merge: true)
+            .setData([CONVERSATIONS: FieldValue.arrayUnion([recieversConversation])], merge: true)
         
         //Update the sender's conversation
         sender.genderCollection
             .document(sender.uid).collection(CONVERSATIONS).document(CONVERSATIONS)
-            .setData(senderConversation, merge: true)
+            .setData([CONVERSATIONS: FieldValue.arrayUnion([senderConversation])], merge: true)
         
         //Create conversation collection
         COLLECTION_CONVERSATIONS.document(conversationId)
@@ -213,7 +237,7 @@ public class Service {
         COLLECTION_MATCHES.document(sender.uid).collection(MATCHES).document(reciever.uid).updateData([BEGAN_CONVERSATION: true])
         
         //Return the conversation Id
-        completion(conversationId)
+        completion()
         
     }
     
@@ -242,9 +266,11 @@ public class Service {
     
     public static func sendMessage(to conversationId: String, message: Message) {
         
+        //Append message to conversation
         COLLECTION_CONVERSATIONS.document(conversationId).updateData([
             MESSAGES: FieldValue.arrayUnion([message.createMessageNode(from: conversationId)] as [Any])
         ])
+        
         
     }
     
@@ -283,25 +309,57 @@ public class Service {
         
         COLLECTION_MALE_USERS.document(uid).getDocument { (snapshot, error) in
             
-            if let userNode = snapshot?.data() {
-                guard let user = User(with: userNode) else {
-                    print("DEBUG: Failed to create user")
-                    return
-                }
-                completion(user)
-            }
-            else {
-                COLLECTION_FEMALE_USERS.document(uid).getDocument { snapshot, error in
-                    guard let userNode = snapshot?.data() else {
-                        print("DEBUG: No user node found")
-                        return
+            if let snapshot = snapshot {
+                
+                do {
+                    
+                    if let user = try snapshot.data(as: User.self) {
+                        completion(user)
                     }
-                    guard let user = User(with: userNode) else {
-                        print("DEBUG: Failed to create user")
-                        return
+                    else {
+                        
+                        COLLECTION_FEMALE_USERS.document(uid).getDocument { snapshot, error in
+                            
+                            if let snapshot = snapshot {
+                                
+                                do {
+                                
+                                    if let user = try snapshot.data(as: User.self) {
+                                        completion(user)
+                                    }
+
+                                }
+                                catch(let error) {
+                                    print("DEBUG: Error decoding user: \(error)")
+                                }
+                            }
+                        }
                     }
                     
-                    completion(user)
+
+                }
+                catch(let error) {
+                    print("DEBUG: Error decoding user: \(error)")
+                }
+                
+            }
+            else {
+                
+                COLLECTION_FEMALE_USERS.document(uid).getDocument { snapshot, error in
+                    
+                    if let snapshot = snapshot {
+                        
+                        do {
+                        
+                            if let user = try snapshot.data(as: User.self) {
+                                completion(user)
+                            }
+
+                        }
+                        catch(let error) {
+                            print("DEBUG: Error decoding user: \(error)")
+                        }
+                    }
                 }
             }
         }

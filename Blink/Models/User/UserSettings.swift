@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct UserSettings {
+public struct UserSettings: Codable {
     
     var minSeekingAge: Int
     var maxSeekingAge: Int
@@ -18,8 +18,6 @@ public struct UserSettings {
     var latitude: Double
     var longitude: Double
 
-    
-    
     init(minSeekingAge: Int, maxSeekingAge: Int, distanceRange: Int, gender: Gender,
          preference: Gender, geoHash: String, latitude: Double, longitude: Double) {
         
@@ -34,21 +32,16 @@ public struct UserSettings {
         
     }
     
-    init?(userNode: [String: Any]) {
+    enum CodingKeys: String, CodingKey {
         
-        guard let userSettings = userNode[USER_SETTINGS] as? [String: Any],
-              let minSeekingAge = userSettings[MIN_SEEKING_AGE] as? Int,
-              let maxSeekingAge = userSettings[MAX_SEEKING_AGE_KEY] as? Int,
-              let distanceRange = userSettings[DISTANCE_RANGE] as? Int,
-              let genderString = userSettings[GENDER] as? String,
-              let gender = Gender(rawValue: genderString),
-              let preferenceString = userSettings[PREFERENCE] as? String,
-              let preference = Gender(rawValue: preferenceString),
-              let geoHash = userSettings[GEO_HASH] as? String,
-              let latitude = userSettings[LATITUDE] as? Double,
-              let longitude = userSettings[LONGITUDE] as? Double else { return nil }
-        
-        self.init(minSeekingAge: minSeekingAge, maxSeekingAge: maxSeekingAge, distanceRange: distanceRange, gender: gender, preference: preference, geoHash: geoHash, latitude: latitude, longitude: longitude)
+        case minSeekingAge = "min_seeking_age"
+        case maxSeekingAge = "max_seeking_age"
+        case distanceRange = "distance_range"
+        case gender = "gender"
+        case preference = "preference"
+        case geoHash = "geoHash"
+        case latitude = "latitude"
+        case longitude = "longitude"
         
     }
     

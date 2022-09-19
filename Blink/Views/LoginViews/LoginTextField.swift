@@ -28,6 +28,9 @@ class LoginTextField: UITextField {
     
     private func configureFields(placeHolder: String, isPassword: Bool) {
         
+        //Set text color to white
+        textColor = .white
+        
         //Set background to clear
         backgroundColor = .clear
         

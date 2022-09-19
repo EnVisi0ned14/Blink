@@ -36,6 +36,9 @@ class CustomLabel: UILabel {
         //Assign the color
         textColor = txtColor
         
+        //Turn off auto resizing
+        translatesAutoresizingMaskIntoConstraints = false
+        
     }
 
 
